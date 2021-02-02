@@ -2,7 +2,6 @@
   <div id="app">
     <navbar></navbar>
     <router-view />
-
     <sidebar></sidebar>
     <fotter></fotter>
   </div>

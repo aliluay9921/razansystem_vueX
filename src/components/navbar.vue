@@ -178,6 +178,7 @@ export default {
     );
     document.head.appendChild(scriptSemantic);
     let linkSemantic = document.createElement("link");
+
     linkSemantic.setAttribute(
       "href",
       "https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css"
