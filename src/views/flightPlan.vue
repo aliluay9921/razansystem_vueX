@@ -68,104 +68,103 @@
       <h2>شركات الطيران</h2>
     </div>
 
-    <div class="drop-flight">
-      <select name="skills" multiple="" class="ui fluid dropdown">
-        <option value="">Skills</option>
-        <option value="angular">Angular</option>
-        <option value="css">CSS</option>
-      </select>
-    </div>
-    <div class="resualt">
-      <div class="flightline">
-        <p>الخطوط الجوية التركية</p>
-        <button><i class="plus icon"></i>اضافة رحلة</button>
-      </div>
-      <div class="multiblog">
-        <div class="blog">
-          <div class="content">
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-          </div>
-          <div class="content">
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-          </div>
-          <div class="content">
-            <div class="child ui labeled button" tabindex="0">
-              <a class="w-100 ui teal left pointing label"> سعر التذكرة </a>
-              <div class="w-100 ui basic button">50</div>
-            </div>
-            <div class="ui icon input">
-              <input type="text" placeholder="ملاحضة" />
+    <div class="ui grid column">
+      <div class="row centered">
+        <div class="ten wide column">
+          <p>Message is: {{ airLines }}</p>
+          <div class="ui multiple selection fluid dropdown airLines-dropdown">
+            <input
+              v-if="dropDownRender"
+              name="gender"
+              type="hidden"
+              class="airLines"
+              v-model="airLines"
+              v-on:change="airLinesChange"
+            />
+            <i class="dropdown icon"></i>
+            <div class="default text">Default</div>
+            <div class="menu">
+              <div class="item" data-value="0">Value</div>
+              <div class="item" data-value="1">Another Value</div>
+              <div class="item" data-value="2">Default Value</div>
+              <div class="item" data-value="3">Second Default</div>
             </div>
           </div>
         </div>
-        <div class="blog">
-          <div class="content">
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-          </div>
-          <div class="content">
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-            <div class="drop">
-              <select class="ui dropdown">
-                <option value="">Gender</option>
-                <option value="1">Male</option>
-                <option value="0">Female</option>
-              </select>
-            </div>
-          </div>
-          <div class="content">
-            <div class="child ui labeled button" tabindex="0">
-              <a class="w-100 ui teal left pointing label"> سعر التذكرة </a>
-              <div class="w-100 ui basic button">50</div>
-            </div>
-            <div class="ui icon input">
-              <input type="text" placeholder="ملاحضة" />
-            </div>
-          </div>
+      </div>
+      <div class="row centered" v-if="Object.keys(this.dataTable).length > 0">
+        <div class="fourteen wide column">
+          <table class="ui padded table result" v-if="this.render">
+            <tbody v-for="(value, name) in dataTable" :key="name">
+              <tr v-for="(trip, index) in value" :key="trip.id">
+                <th v-if="index == 0" :rowspan="value.length + 1" colspan="1">
+                  <p>{{ name }}</p>
+                  <button class="add-button" v-on:click="addTrip(name)">
+                    <i class="plus icon"></i>اضافة رحلة
+                  </button>
+                </th>
+                <td>
+                  <div class="ui three column grid">
+                    <div class="row">
+                      <div
+                        class="ui top left attached label delete-pad"
+                        v-on:click="deleteTrip(name, index)"
+                      >
+                        <p>حذف</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column">
+                        <select class="ui fluid dropdown">
+                          <option value="">Gender</option>
+                          <option value="1">Male</option>
+                          <option value="0">Female</option>
+                        </select>
+                      </div>
+                      <div class="column">
+                        <select class="ui fluid dropdown">
+                          <option value="">Gender</option>
+                          <option value="1">Male</option>
+                          <option value="0">Female</option>
+                        </select>
+                      </div>
+                      <div class="column">
+                        <div class="child ui labeled button price" tabindex="0">
+                          <a class="w-100 ui teal left pointing label">
+                            سعر التذكرة
+                          </a>
+                          <div class="w-100 ui basic button">50</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="column">
+                        <div class="ui input">
+                          <input
+                            type="datetime-local"
+                            placeholder="وقت الذهاب..."
+                          />
+                        </div>
+                      </div>
+                      <div class="column">
+                        <div class="ui input">
+                          <input
+                            type="datetime-local"
+                            placeholder="وقت الرجوع..."
+                          />
+                        </div>
+                      </div>
+                      <div class="column">
+                        <div class="ui input note">
+                          <input type="text" placeholder="ملاحضة" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -173,24 +172,113 @@
 </template>
 
 <script>
-import $ from "jquery";
+// import $ from "jquery";
 export default {
   name: "flightPlan",
   components: {},
+  data() {
+    return {
+      airLines: "",
+      render: true,
+      dropDownRender: true,
+      dataTable: {},
+    };
+  },
   mounted() {
-    $(".dropdown").dropdown({
-      clearable: true,
+    $("document").ready(function () {
+      $(".dropdown").dropdown({
+        clearable: true,
+      });
+      $(".dropdown").dropdown({
+        clearable: true,
+        placeholder: "any",
+      });
     });
-    $(".dropdown").dropdown({
-      clearable: true,
-      placeholder: "any",
-    });
+  },
+  computed: {
+    splittedAirlines: function () {
+      return this.airLines.split(",");
+    },
+  },
+  methods: {
+    forceRerender() {
+      this.render = false;
+      this.$nextTick().then(() => {
+        this.render = true;
+      });
+    },
+    forceDropDownRerender() {
+      this.dropDownRender = false;
+      this.$nextTick().then(() => {
+        this.dropDownRender = true;
+      });
+    },
+    getRandomInt: function (min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+    airLinesChange: function () {
+      this.airLines = $(".airLines").val();
+      var splitted = this.splittedAirlines;
+      var keys = Object.keys(this.dataTable);
+      console.log(splitted);
+      if (keys.length == 0) {
+        this.dataTable[splitted[splitted.length - 1]] = Array();
+        this.dataTable[splitted[splitted.length - 1]].push({
+          id: this.getRandomInt(0, 100000),
+        });
+      } else {
+        if (splitted.length > keys.length) {
+          //add
+          this.dataTable[splitted[splitted.length - 1]] = Array();
+          this.dataTable[splitted[splitted.length - 1]].push({
+            id: this.getRandomInt(0, 100000),
+          });
+        } else {
+          keys.forEach((k) => {
+            var isExist = false;
+            splitted.forEach((s) => {
+              if (s == k) isExist = true;
+            });
+            if (!isExist) {
+              delete this.dataTable[k];
+            }
+          });
+        }
+      }
+    },
+    deleteSelection(name) {
+      var splitted = this.airLines.split(",");
+      var filtered = splitted.filter((airline) => airline != name);
+      this.airLines = filtered.join(",");
+      if (this.airLines == null) $(".airLines").val("");
+      $(".airLines").val(this.airLines);
+      console.log(this.airLines);
+      console.log($(".airLines").val());
+      $(".airLines-dropdown").dropdown("remove selected", name);
+    },
+    addTrip: function (name) {
+      console.log(this.dataTable[name]);
+      this.dataTable[name].push({ id: this.getRandomInt(0, 100000) });
+      this.forceRerender();
+    },
+    deleteTrip: function (name, index) {
+      this.dataTable[name].splice(index, 1);
+      if (this.dataTable[name].length == 0) {
+        delete this.dataTable[name];
+        this.deleteSelection(name);
+      }
+      this.forceRerender();
+    },
   },
 };
 </script>
 <style>
-.ui.category {
-  margin-left: 500px !important ;
+th {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.03);
+  width: 25%;
 }
 
 .details {
@@ -255,61 +343,41 @@ img {
   padding: 20px;
   margin-right: 50px;
 }
-.dropdwon-company {
-  margin-bottom: 20px;
-}
+.dropdwon-company,
 .drop-flight {
   margin-bottom: 20px;
-  margin-left: 190px;
-  text-align: center;
-  width: 80% !important ;
 }
-.resualt {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+
+.result {
   background-color: #f7ffff;
   border: 1px solid #02b7b2;
-  width: 70%;
-  margin-left: 250px;
+
   direction: rtl;
-  margin-bottom: 150px;
 }
-.resualt .flightline {
-  padding: 20px;
-  text-align: center;
-  background-color: #f7ffff;
+.row {
+  /* f777a2 */
+  margin-right: 0px;
+  margin-left: 0px;
 }
-.resualt .flightline p {
-  font-size: 16px;
-  padding: 10px;
-  font-family: sans-serif;
-  font-weight: 600px;
-}
-.resualt .flightline button {
-  font-size: 16px;
+.add-button {
+  font-size: 13px;
   border-radius: 20px;
-  padding: 10px;
-  width: 150px;
+  padding: 7px;
+  color: white;
+  outline: none !important;
+  border: transparent;
   background-color: #02b7b2;
 }
-.resualt .flightline button i {
-  margin-left: 5px;
+.delete-pad {
+  background: #f777a2 !important;
+  color: white !important;
+  cursor: pointer;
+  padding: 5px;
 }
-.multiblog {
-  display: flex;
-  flex-direction: column;
-}
-.blog {
-  display: flex;
-}
-.resualt .content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 10px;
-}
-.drop {
-  margin: 5px;
+.price,
+.note {
+  width: 100%;
+  height: 100%;
+  margin-right: 0px;
 }
 </style>
