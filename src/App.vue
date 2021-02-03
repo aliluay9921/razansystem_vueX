@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-    <navbar></navbar>
-    <router-view />
-    <sidebar></sidebar>
-    <fotter></fotter>
+    <div class="wrapper">
+      <navbar></navbar>
+      <router-view />
+      <sidebar></sidebar>
+      <fotter></fotter>
+    </div>
   </div>
 </template>
 <script>
@@ -18,6 +20,4 @@ export default {
   },
 };
 </script>
-<style>
-@import "../src/style/flightPlan.css";
-</style>
+<style></style>
