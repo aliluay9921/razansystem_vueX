@@ -178,9 +178,6 @@ export default {
   name: "flightPlan",
   components: {},
   mounted() {
-<<<<<<< HEAD
-    console.log($(".dropdown"));
-=======
     $(".dropdown").dropdown({
       clearable: true,
     });
@@ -188,7 +185,6 @@ export default {
       clearable: true,
       placeholder: "any",
     });
->>>>>>> 9952c1e7b31bd36feba7b3c65b2e89f124a8199a
   },
 };
 </script>
