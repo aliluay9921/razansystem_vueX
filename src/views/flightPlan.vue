@@ -71,7 +71,6 @@
     <div class="ui grid column">
       <div class="row centered">
         <div class="ten wide column">
-          <p>Message is: {{ airLines }}</p>
           <div class="ui multiple selection fluid dropdown airLines-dropdown">
             <input
               v-if="dropDownRender"
@@ -96,7 +95,7 @@
         <div class="fourteen wide column">
           <table class="ui padded table result" v-if="this.render">
             <tbody v-for="(value, name) in dataTable" :key="name">
-              <tr v-for="(trip, index) in value" :key="trip.id">
+              <tr v-for="(trip, index) in value" :key="index">
                 <th v-if="index == 0" :rowspan="value.length + 1" colspan="1">
                   <p>{{ name }}</p>
                   <button class="add-button" v-on:click="addTrip(name)">
@@ -115,15 +114,23 @@
                     </div>
                     <div class="row">
                       <div class="column">
-                        <select class="ui fluid dropdown">
-                          <option value="">Gender</option>
+                        <select
+                          @change="forceRerender"
+                          class="ui fluid dropdown"
+                          v-model="trip.from_port"
+                        >
+                          <option value="" disabled>Gender</option>
                           <option value="1">Male</option>
                           <option value="0">Female</option>
                         </select>
                       </div>
                       <div class="column">
-                        <select class="ui fluid dropdown">
-                          <option value="">Gender</option>
+                        <select
+                          @change="forceRerender"
+                          class="ui fluid dropdown"
+                          v-model="trip.to_port"
+                        >
+                          <option value="" disabled>Gender</option>
                           <option value="1">Male</option>
                           <option value="0">Female</option>
                         </select>
@@ -133,7 +140,17 @@
                           <a class="w-100 ui teal left pointing label">
                             سعر التذكرة
                           </a>
-                          <div class="w-100 ui basic button">50</div>
+                          <input
+                            @change="forceRerender"
+                            v-model="trip.price"
+                            class="w-100 ui basic"
+                            style="
+                              outline: none;
+                              text-align: center;
+                              border: 1px solid rgba(34, 36, 38, 0.15);
+                            "
+                            value="50"
+                          />
                         </div>
                       </div>
                     </div>
@@ -141,6 +158,8 @@
                       <div class="column">
                         <div class="ui input">
                           <input
+                            @change="forceRerender"
+                            v-model="trip.from_time"
                             type="datetime-local"
                             placeholder="وقت الذهاب..."
                           />
@@ -149,6 +168,8 @@
                       <div class="column">
                         <div class="ui input">
                           <input
+                            @change="forceRerender"
+                            v-model="trip.to_time"
                             type="datetime-local"
                             placeholder="وقت الرجوع..."
                           />
@@ -156,7 +177,13 @@
                       </div>
                       <div class="column">
                         <div class="ui input note">
-                          <input type="text" placeholder="ملاحضة" />
+                          <input
+                            @change="forceRerender"
+                            v-model="trip.note"
+                            type="text"
+                            style="outline: none; text-align: right"
+                            placeholder="ملاحضة"
+                          />
                         </div>
                       </div>
                     </div>
@@ -166,6 +193,11 @@
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="row centered" v-if="Object.keys(this.dataTable).length > 0">
+        <button class="ui button send-button" v-on:click="sendTrip">
+          <i class="send icon"></i>أرسال رحلة
+        </button>
       </div>
     </div>
   </div>
@@ -201,6 +233,15 @@ export default {
     },
   },
   methods: {
+    sendTrip() {
+      console.log(this.dataTable);
+      $("body").toast({
+        showProgress: "top",
+        classProgress: "blue",
+        title: "Better ?",
+        message: JSON.stringify(this.dataTable),
+      });
+    },
     forceRerender() {
       this.render = false;
       this.$nextTick().then(() => {
@@ -226,14 +267,24 @@ export default {
       if (keys.length == 0) {
         this.dataTable[splitted[splitted.length - 1]] = Array();
         this.dataTable[splitted[splitted.length - 1]].push({
-          id: this.getRandomInt(0, 100000),
+          from_port: "",
+          to_port: "",
+          price: 0,
+          from_time: "",
+          to_time: "",
+          note: "",
         });
       } else {
         if (splitted.length > keys.length) {
           //add
           this.dataTable[splitted[splitted.length - 1]] = Array();
           this.dataTable[splitted[splitted.length - 1]].push({
-            id: this.getRandomInt(0, 100000),
+            from_port: "",
+            to_port: "",
+            price: 0,
+            from_time: "",
+            to_time: "",
+            note: "",
           });
         } else {
           keys.forEach((k) => {
@@ -260,7 +311,14 @@ export default {
     },
     addTrip: function (name) {
       console.log(this.dataTable[name]);
-      this.dataTable[name].push({ id: this.getRandomInt(0, 100000) });
+      this.dataTable[name].push({
+        from_port: "",
+        to_port: "",
+        price: 0,
+        from_time: "",
+        to_time: "",
+        note: "",
+      });
       this.forceRerender();
     },
     deleteTrip: function (name, index) {
@@ -275,6 +333,15 @@ export default {
 };
 </script>
 <style>
+.send-button {
+  width: 50%;
+  font-size: 13px;
+  padding: 7px;
+  color: white !important;
+  outline: none !important;
+  border: transparent;
+  background-color: #02b7b2 !important;
+}
 th {
   text-align: center;
   background: rgba(0, 0, 0, 0.03);
@@ -317,15 +384,15 @@ th {
 .step {
   padding: 15px !important;
 }
-.content {
+.steps-book .content {
   text-align: center;
   padding-left: 80px;
 }
-.content .title {
+.steps-book .content .title {
   color: black !important;
   margin-bottom: 15px;
 }
-.content .description {
+.steps-book .content .description {
   font-size: 16px !important;
 }
 img {
