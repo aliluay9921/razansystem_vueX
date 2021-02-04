@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '../store/index'
 import FlightPlan from '../views/flightPlan.vue'
 Vue.use(VueRouter)
 
@@ -8,6 +9,9 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    meta: {
+      requiresAuth: true
+    },
     component: Home
   },
   {
@@ -30,5 +34,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/login')
+  } else {
+    next()
+  }
+})
 export default router
