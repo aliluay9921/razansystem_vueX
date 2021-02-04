@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import store from '../store/index'
 import FlightPlan from '../views/flightPlan.vue'
+import login from '../components/login.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -13,6 +14,12 @@ const routes = [
       requiresAuth: true
     },
     component: Home
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: login,
+    // meta: { requiresAuth: false },
   },
   {
     path: '/flightplan',
@@ -35,7 +42,7 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
       next()
       return

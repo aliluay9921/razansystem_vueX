@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="wrapper" v-if="isLoggedIn">
+      | <a @click="logout">Logout</a>
       <navbar></navbar>
       <router-view />
       <sidebar></sidebar>
@@ -24,13 +25,13 @@ export default {
   },
   mounted() {},
   computed: {
-    isLoggedIn: function () {
+    isLoggedIn: function() {
       console.log(this.$store.getters.isLoggedIn);
       return this.$store.getters.isLoggedIn;
     },
   },
   methods: {
-    logout: function () {
+    logout: function() {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
       });
