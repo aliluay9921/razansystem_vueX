@@ -2,13 +2,15 @@
   <div class="content-wrapper">
     <div class="details">
       <h2>معلومات الحجز</h2>
-      <h1>{{ getinfo.id }}</h1>
 
       <p>قم بالبحث بأستخدام المعلومات ادناه لتسجيل الطلب</p>
     </div>
     <div class="booking">
       <div class="child ui labeled button" tabindex="0">
-        <div class="ui basic button">بغداد</div>
+        <div class="ui basic button">
+          {{ selected_order.to }}
+        </div>
+
         <a class="ui teal left pointing label">
           <i class="map marker alternate icon red"></i>
           الى
@@ -16,7 +18,7 @@
       </div>
 
       <div class="ui labeled button" tabindex="0">
-        <div class="ui basic button">البصرة</div>
+        <div class="ui basic button">{{ selected_order.from }}</div>
         <a class="ui teal left pointing label"
           ><i class="map marker alternate icon red"></i>
 
@@ -26,14 +28,14 @@
     </div>
     <div class="booking-one">
       <div class="child ui labeled button" tabindex="0">
-        <div class="ui basic button">22/2/2020</div>
+        <div class="ui basic button">{{ selected_order.returndate }}</div>
         <a class="ui teal left pointing label">
           <i class="calendar alternate icon red"></i>
           تأريخ الرجوع
         </a>
       </div>
       <div class="ui labeled button" tabindex="0">
-        <div class="ui basic button">22/2/2020</div>
+        <div class="ui basic button">{{ selected_order.fromdate }}</div>
         <a class="ui teal left pointing label">
           <i class="calendar alternate icon red"></i>
 
@@ -207,7 +209,7 @@
 
 <script>
 // import $ from "jquery";
-import { mapGetters } from "vuex";
+
 export default {
   name: "flightPlan",
   components: {},
@@ -235,7 +237,9 @@ export default {
     splittedAirlines: function() {
       return this.airLines.split(",");
     },
-    ...mapGetters(["getinfo"]),
+    selected_order() {
+      return this.$store.state.selected_order;
+    },
   },
   methods: {
     sendTrip() {

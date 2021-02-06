@@ -130,13 +130,14 @@
           <div class="dropdown-divider"></div>
 
           <div v-for="(item, index) in items" :key="index">
-            <a href="#" class="dropdown-item">
-              <i class="fa fa-user mr-2"></i>
-              {{ item.user.FullName }}
-              <span class="float-right text-muted text-sm"
-                ><timeago :datetime="item.created_at"></timeago>
-              </span>
-            </a>
+            <router-link to="/flightplan">
+              <a href="#" class="dropdown-item" @click="getinfo(item.order)">
+                <i class="fa fa-user mr-2"></i>
+                {{ item.user.FullName }}
+                <span class="float-right text-muted text-sm"
+                  ><timeago :datetime="item.created_at"></timeago>
+                </span> </a
+            ></router-link>
             <div class="dropdown-divider"></div>
           </div>
 
@@ -167,13 +168,22 @@
   <!-- /.navbar -->
 </template>
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 export default {
-  components: {},
+  name: "navbar",
+  data() {
+    return {};
+  },
   computed: {
-    ...mapState(["items", "selected_order"]),
+    items() {
+      return this.$store.state.items;
+    },
   },
   methods: {
+    getinfo(item) {
+      console.log(item);
+      this.$store.commit("getinfo", item);
+    },
     ...mapActions(["loadItems"]),
   },
 

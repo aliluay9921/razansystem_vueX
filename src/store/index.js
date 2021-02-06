@@ -10,17 +10,18 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || '',
     user: {},
     items: [],
-    selected_order: null
+    selected_order: {}
   },
   getters: {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    getinfo: (state) => {
-      return state.selected_order;
-    }
+
   },
 
   mutations: {
+    getinfo(state, item) {
+      state.selected_order = item;
+    },
     // ###################### auth process ######################33
     auth_request(state) {
       state.status = 'loading'
