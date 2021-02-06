@@ -124,22 +124,22 @@
           <span class="badge badge-warning navbar-badge">15</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
+          <span class="dropdown-item dropdown-header"
+            >اشعارات تسجيل حجوزات</span
+          >
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> 3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
-          </a>
+
+          <div v-for="(item, index) in items" :key="index">
+            <a href="#" class="dropdown-item">
+              <i class="fa fa-user mr-2"></i>
+              {{ item.user.FullName }}
+              <span class="float-right text-muted text-sm"
+                ><timeago :datetime="item.created_at"></timeago>
+              </span>
+            </a>
+            <div class="dropdown-divider"></div>
+          </div>
+
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer"
             >See All Notifications</a
@@ -167,8 +167,19 @@
   <!-- /.navbar -->
 </template>
 <script>
+import { mapActions, mapState } from "vuex";
 export default {
   components: {},
+  computed: {
+    ...mapState(["items", "selected_order"]),
+  },
+  methods: {
+    ...mapActions(["loadItems"]),
+  },
+
+  created() {
+    this.loadItems();
+  },
   mounted() {
     let scriptSemantic = document.createElement("script");
     scriptSemantic.setAttribute(

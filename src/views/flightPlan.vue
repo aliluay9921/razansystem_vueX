@@ -2,6 +2,8 @@
   <div class="content-wrapper">
     <div class="details">
       <h2>معلومات الحجز</h2>
+      <h1>{{ getinfo.id }}</h1>
+
       <p>قم بالبحث بأستخدام المعلومات ادناه لتسجيل الطلب</p>
     </div>
     <div class="booking">
@@ -205,6 +207,7 @@
 
 <script>
 // import $ from "jquery";
+import { mapGetters } from "vuex";
 export default {
   name: "flightPlan",
   components: {},
@@ -216,8 +219,9 @@ export default {
       dataTable: {},
     };
   },
+
   mounted() {
-    $("document").ready(function () {
+    $("document").ready(function() {
       $(".dropdown").dropdown({
         clearable: true,
       });
@@ -228,9 +232,10 @@ export default {
     });
   },
   computed: {
-    splittedAirlines: function () {
+    splittedAirlines: function() {
       return this.airLines.split(",");
     },
+    ...mapGetters(["getinfo"]),
   },
   methods: {
     sendTrip() {
@@ -254,12 +259,12 @@ export default {
         this.dropDownRender = true;
       });
     },
-    getRandomInt: function (min, max) {
+    getRandomInt: function(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    airLinesChange: function () {
+    airLinesChange: function() {
       this.airLines = $(".airLines").val();
       var splitted = this.splittedAirlines;
       var keys = Object.keys(this.dataTable);
@@ -309,7 +314,7 @@ export default {
       console.log($(".airLines").val());
       $(".airLines-dropdown").dropdown("remove selected", name);
     },
-    addTrip: function (name) {
+    addTrip: function(name) {
       console.log(this.dataTable[name]);
       this.dataTable[name].push({
         from_port: "",
@@ -321,7 +326,7 @@ export default {
       });
       this.forceRerender();
     },
-    deleteTrip: function (name, index) {
+    deleteTrip: function(name, index) {
       this.dataTable[name].splice(index, 1);
       if (this.dataTable[name].length == 0) {
         delete this.dataTable[name];
