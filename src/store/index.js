@@ -10,6 +10,8 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || '',
     user: {},
     items: [],
+    flightlines: [],
+    countries: [],
     selected_order: {}
   },
   getters: {
@@ -43,15 +45,40 @@ export default new Vuex.Store({
       state.items = data;
 
     },
+    set_flightLine(state, data) {
+      state.flightlines = data;
 
+    },
+    set_country(state, data) {
+      state.countries = data;
+
+    },
 
   },
   actions: {
     async loadItems({ commit }) {
       await axios
-        .get("http://127.0.0.1:8000/api/notifications_employee")
+        .get("http://192.168.0.159:8000/api/notifications_employee")
         .then((response) => {
           commit("SET_Item", response.data.result)
+
+
+        });
+    },
+    async loadCountries({ commit }) {
+      await axios
+        .get("http://192.168.0.159:8000/api/countary")
+        .then((response) => {
+          commit("set_country", response.data.result)
+
+
+        });
+    },
+    async flightline({ commit }) {
+      await axios
+        .get("http://192.168.0.159:8000/api/flightline")
+        .then((response) => {
+          commit("set_flightLine", response.data.result)
 
 
         });
@@ -60,7 +87,7 @@ export default new Vuex.Store({
     login({ commit }, UserName) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({ url: 'http://127.0.0.1:8000/api/loginadmin', data: UserName, method: 'POST' })
+        axios({ url: 'http://192.168.0.159:8000/api/loginadmin', data: UserName, method: 'POST' })
           .then(resp => {
 
             const token = resp.data.token

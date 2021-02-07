@@ -184,11 +184,13 @@ export default {
       console.log(item);
       this.$store.commit("getinfo", item);
     },
-    ...mapActions(["loadItems"]),
+    ...mapActions(["loadItems", "flightline", "loadCountries"]),
   },
 
   created() {
     this.loadItems();
+    this.flightline();
+    this.loadCountries();
   },
   mounted() {
     let scriptSemantic = document.createElement("script");

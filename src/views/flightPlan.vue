@@ -8,7 +8,7 @@
     <div class="booking">
       <div class="child ui labeled button" tabindex="0">
         <div class="ui basic button">
-          {{ selected_order.to }}
+          {{ selected_order.to_location.longName }}
         </div>
 
         <a class="ui teal left pointing label">
@@ -18,7 +18,9 @@
       </div>
 
       <div class="ui labeled button" tabindex="0">
-        <div class="ui basic button">{{ selected_order.from }}</div>
+        <div class="ui basic button">
+          {{ selected_order.from_location.longName }}
+        </div>
         <a class="ui teal left pointing label"
           ><i class="map marker alternate icon red"></i>
 
@@ -49,21 +51,27 @@
           <img src="/image/man.svg" alt="" />
           <div class="content">
             <div class="title">البالغين</div>
-            <div class="description"><b>5</b></div>
+            <div class="description">
+              <b>{{ adult }}</b>
+            </div>
           </div>
         </a>
         <a class="active step">
           <img src="/image/boy.svg" alt="" />
           <div class="content">
             <div class="title">الاطفال</div>
-            <div class="description"><b>5</b></div>
+            <div class="description">
+              <b>{{ child }}</b>
+            </div>
           </div>
         </a>
         <a class="step">
           <img src="/image/baby-boy.svg" alt="" />
           <div class="content">
             <div class="title">الرضع</div>
-            <div class="description"><b>5</b></div>
+            <div class="description">
+              <b>{{ infant }}</b>
+            </div>
           </div>
         </a>
       </div>
@@ -85,12 +93,16 @@
               v-on:change="airLinesChange"
             />
             <i class="dropdown icon"></i>
-            <div class="default text">Default</div>
+            <div class="default text">أختر خطوط طيران ...</div>
             <div class="menu">
-              <div class="item" data-value="0">Value</div>
-              <div class="item" data-value="1">Another Value</div>
-              <div class="item" data-value="2">Default Value</div>
-              <div class="item" data-value="3">Second Default</div>
+              <div
+                v-for="flight in dropdownFlightLine"
+                v-bind:key="flight.id"
+                class="item"
+                :data-value="flight.name"
+              >
+                {{ flight.name }}
+              </div>
             </div>
           </div>
         </div>
@@ -123,9 +135,14 @@
                           class="ui fluid dropdown"
                           v-model="trip.from_port"
                         >
-                          <option value="" disabled>Gender</option>
-                          <option value="1">Male</option>
-                          <option value="0">Female</option>
+                          <option value="" disabled>مدينة الأقلاع</option>
+                          <option
+                            v-for="country in countries"
+                            :key="country.id"
+                            :value="country.id"
+                          >
+                            {{ country.cityName }}
+                          </option>
                         </select>
                       </div>
                       <div class="column">
@@ -134,9 +151,14 @@
                           class="ui fluid dropdown"
                           v-model="trip.to_port"
                         >
-                          <option value="" disabled>Gender</option>
-                          <option value="1">Male</option>
-                          <option value="0">Female</option>
+                          <option value="" disabled>مدينة الهبوط</option>
+                          <option
+                            v-for="country in countries"
+                            :key="country.id"
+                            :value="country.id"
+                          >
+                            {{ country.cityName }}
+                          </option>
                         </select>
                       </div>
                       <div class="column">
@@ -216,6 +238,10 @@ export default {
   data() {
     return {
       airLines: "",
+      adult: 0,
+      dropdownFlightLine: [],
+      child: 0,
+      infant: 0,
       render: true,
       dropDownRender: true,
       dataTable: {},
@@ -223,7 +249,7 @@ export default {
   },
 
   mounted() {
-    $("document").ready(function() {
+    $("document").ready(function () {
       $(".dropdown").dropdown({
         clearable: true,
       });
@@ -232,9 +258,25 @@ export default {
         placeholder: "any",
       });
     });
+    this.child = this.selected_order.passengers.filter(
+      (e) => e.type == "child"
+    ).length;
+    this.adult = this.selected_order.passengers.filter(
+      (e) => e.type == "adult"
+    ).length;
+    this.infant = this.selected_order.passengers.filter(
+      (e) => e.type == "infant"
+    ).length;
+    this.dropdownFlightLine = this.flightlines;
   },
   computed: {
-    splittedAirlines: function() {
+    countries() {
+      return this.$store.state.countries;
+    },
+    flightlines() {
+      return this.$store.state.flightlines;
+    },
+    splittedAirlines: function () {
       return this.airLines.split(",");
     },
     selected_order() {
@@ -263,12 +305,12 @@ export default {
         this.dropDownRender = true;
       });
     },
-    getRandomInt: function(min, max) {
+    getRandomInt: function (min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    airLinesChange: function() {
+    airLinesChange: function () {
       this.airLines = $(".airLines").val();
       var splitted = this.splittedAirlines;
       var keys = Object.keys(this.dataTable);
@@ -318,7 +360,7 @@ export default {
       console.log($(".airLines").val());
       $(".airLines-dropdown").dropdown("remove selected", name);
     },
-    addTrip: function(name) {
+    addTrip: function (name) {
       console.log(this.dataTable[name]);
       this.dataTable[name].push({
         from_port: "",
@@ -330,7 +372,7 @@ export default {
       });
       this.forceRerender();
     },
-    deleteTrip: function(name, index) {
+    deleteTrip: function (name, index) {
       this.dataTable[name].splice(index, 1);
       if (this.dataTable[name].length == 0) {
         delete this.dataTable[name];
