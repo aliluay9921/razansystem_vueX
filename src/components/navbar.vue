@@ -169,6 +169,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import Pusher from "pusher-js";
 export default {
   name: "navbar",
   data() {
@@ -181,7 +182,7 @@ export default {
   },
   methods: {
     getinfo(item) {
-      console.log(item);
+      // console.log(item);
       this.$store.commit("getinfo", item);
     },
     ...mapActions(["loadItems", "flightline", "loadCountries"]),
@@ -206,6 +207,18 @@ export default {
       "https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css"
     );
     document.head.appendChild(linkSemantic);
+
+    let pusher = new Pusher("hello", {
+      cluster: "mt1",
+      encrypted: false,
+    });
+
+    //Subscribe to the channel we specified in our Adonis Application
+    let channel = pusher.subscribe("private-notification-admin");
+
+    channel.bind("App\\Events\\AdminNotificationEvent", (data) => {
+      console.log(data);
+    });
   },
 };
 </script>

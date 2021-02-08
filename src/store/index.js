@@ -56,6 +56,21 @@ export default new Vuex.Store({
 
   },
   actions: {
+    //flightplan
+    async storeFlightPlan({ commit }, body) {
+      //  let id = order.id;
+      // console.log(id);
+      console.log(body);
+      // data["order_id"]=id;
+      await axios
+        .post("http://192.168.0.159:8000/api/flightplan",body)
+        .then((response) => {
+          console.log(response);
+          commit("store_flightPlan", response.data.result)
+          // console.log(response);
+          // commit();
+        });
+    },
     async loadItems({ commit }) {
       await axios
         .get("http://192.168.0.159:8000/api/notifications_employee")

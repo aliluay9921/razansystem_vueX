@@ -99,7 +99,7 @@
                 v-for="flight in dropdownFlightLine"
                 v-bind:key="flight.id"
                 class="item"
-                :data-value="flight.name"
+                :data-value="flight.id"
               >
                 {{ flight.name }}
               </div>
@@ -113,7 +113,9 @@
             <tbody v-for="(value, name) in dataTable" :key="name">
               <tr v-for="(trip, index) in value" :key="index">
                 <th v-if="index == 0" :rowspan="value.length + 1" colspan="1">
-                  <p>{{ name }}</p>
+                  <p>
+                    {{ dropdownFlightLine.filter((e) => e.id == name)[0].name }}
+                  </p>
                   <button class="add-button" v-on:click="addTrip(name)">
                     <i class="plus icon"></i>اضافة رحلة
                   </button>
@@ -185,7 +187,7 @@
                         <div class="ui input">
                           <input
                             @change="forceRerender"
-                            v-model="trip.from_time"
+                            v-model="trip.Time_to_go"
                             type="datetime-local"
                             placeholder="وقت الذهاب..."
                           />
@@ -195,7 +197,7 @@
                         <div class="ui input">
                           <input
                             @change="forceRerender"
-                            v-model="trip.to_time"
+                            v-model="trip.Arrival_time"
                             type="datetime-local"
                             placeholder="وقت الرجوع..."
                           />
@@ -285,13 +287,20 @@ export default {
   },
   methods: {
     sendTrip() {
-      console.log(this.dataTable);
-      $("body").toast({
-        showProgress: "top",
-        classProgress: "blue",
-        title: "Better ?",
-        message: JSON.stringify(this.dataTable),
+      let data = [];
+      var dataTable = this.dataTable;
+      var keys = Object.keys(dataTable);
+      var id = this.selected_order.id;
+      console.log(keys);
+      keys.forEach(function (k) {
+        dataTable[k].forEach(function (v) {
+          v["flight_id"] = k;
+          v["order_id"] = id;
+          data.push(v);
+        });
       });
+
+      this.$store.dispatch("storeFlightPlan", data);
     },
     forceRerender() {
       this.render = false;
@@ -314,15 +323,15 @@ export default {
       this.airLines = $(".airLines").val();
       var splitted = this.splittedAirlines;
       var keys = Object.keys(this.dataTable);
-      console.log(splitted);
+      // console.log(splitted);
       if (keys.length == 0) {
         this.dataTable[splitted[splitted.length - 1]] = Array();
         this.dataTable[splitted[splitted.length - 1]].push({
           from_port: "",
           to_port: "",
           price: 0,
-          from_time: "",
-          to_time: "",
+          Time_to_go: "",
+          Arrival_time: "",
           note: "",
         });
       } else {
@@ -333,8 +342,8 @@ export default {
             from_port: "",
             to_port: "",
             price: 0,
-            from_time: "",
-            to_time: "",
+            Time_to_go: "",
+            Arrival_time: "",
             note: "",
           });
         } else {
@@ -356,18 +365,18 @@ export default {
       this.airLines = filtered.join(",");
       if (this.airLines == null) $(".airLines").val("");
       $(".airLines").val(this.airLines);
-      console.log(this.airLines);
-      console.log($(".airLines").val());
+      // console.log(this.airLines);
+      // console.log($(".airLines").val());
       $(".airLines-dropdown").dropdown("remove selected", name);
     },
     addTrip: function (name) {
-      console.log(this.dataTable[name]);
+      // console.log(this.dataTable[name]);
       this.dataTable[name].push({
         from_port: "",
         to_port: "",
         price: 0,
-        from_time: "",
-        to_time: "",
+        Time_to_go: "",
+        Arrival_time: "",
         note: "",
       });
       this.forceRerender();
