@@ -63,7 +63,7 @@ export default new Vuex.Store({
       console.log(body);
       // data["order_id"]=id;
       await axios
-        .post("http://192.168.0.159:8000/api/flightplan",body)
+        .post("http://127.0.0.1:8000/api/flightplan",body)
         .then((response) => {
           console.log(response);
           commit("store_flightPlan", response.data.result)
@@ -73,7 +73,7 @@ export default new Vuex.Store({
     },
     async loadItems({ commit }) {
       await axios
-        .get("http://192.168.0.159:8000/api/notifications_employee")
+        .get("http://127.0.0.1:8000/api/notifications_employee")
         .then((response) => {
           commit("SET_Item", response.data.result)
 
@@ -82,7 +82,7 @@ export default new Vuex.Store({
     },
     async loadCountries({ commit }) {
       await axios
-        .get("http://192.168.0.159:8000/api/countary")
+        .get("http://127.0.0.1:8000/api/countary")
         .then((response) => {
           commit("set_country", response.data.result)
 
@@ -91,7 +91,7 @@ export default new Vuex.Store({
     },
     async flightline({ commit }) {
       await axios
-        .get("http://192.168.0.159:8000/api/flightline")
+        .get("http://127.0.0.1:8000/api/flightline")
         .then((response) => {
           commit("set_flightLine", response.data.result)
 
@@ -102,7 +102,7 @@ export default new Vuex.Store({
     login({ commit }, UserName) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({ url: 'http://192.168.0.159:8000/api/loginadmin', data: UserName, method: 'POST' })
+        axios({ url: 'http://127.0.0.1:8000/api/loginadmin', data: UserName, method: 'POST' })
           .then(resp => {
 
             const token = resp.data.token

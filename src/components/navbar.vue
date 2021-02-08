@@ -209,8 +209,13 @@ export default {
     document.head.appendChild(linkSemantic);
 
     let pusher = new Pusher("hello", {
+      forceTLS: false,
       cluster: "mt1",
       encrypted: false,
+      auth: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      authEndpoint: "http://127.0.0.1:8000/api/broadcasting/auth",
     });
 
     //Subscribe to the channel we specified in our Adonis Application
