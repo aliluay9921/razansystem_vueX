@@ -219,9 +219,9 @@ export default {
     });
 
     //Subscribe to the channel we specified in our Adonis Application
-    let channel = pusher.subscribe("private-notification-admin");
+    let channel = pusher.subscribe("notifications");
 
-    channel.bind("App\\Events\\AdminNotificationEvent", (data) => {
+    channel.bind("App\\Events\\NotificationsEvent", (data) => {
       console.log(data);
     });
   },
