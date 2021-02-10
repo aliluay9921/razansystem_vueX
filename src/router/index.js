@@ -5,6 +5,28 @@ import store from '../store/index'
 import FlightPlan from '../views/flightPlan.vue'
 import login from '../components/login.vue'
 Vue.use(VueRouter)
+Vue.use(require('vue-pusher'),
+{
+  api_key:"hello",options:
+
+{
+  
+  wsHost: "127.0.0.1",
+  wsPort: 6001,
+  wssPort: 6001,
+  wsPath: "",
+  disableStats: true,
+  authEndpoint: "http://192.168.0.159:8000/api/broadcasting/auth",
+  auth: {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+      "X-CSRF-Token": localStorage.getItem("token"),
+      "X-App-ID": "hello",
+    },
+  },
+  enabledTransports: ["ws", "wss", "websocket", "polling", "flashsocket"],
+  forceTLS: false,
+}});
 
 const routes = [
   {

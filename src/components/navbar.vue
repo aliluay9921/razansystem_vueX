@@ -121,31 +121,11 @@
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <span class="badge badge-warning navbar-badge">{{
+            items.length
+          }}</span>
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header"
-            >اشعارات تسجيل حجوزات</span
-          >
-          <div class="dropdown-divider"></div>
-
-          <div v-for="(item, index) in items" :key="index">
-            <router-link to="/flightplan">
-              <a href="#" class="dropdown-item" @click="getinfo(item.order)">
-                <i class="fa fa-user mr-2"></i>
-                {{ item.user.FullName }}
-                <span class="float-right text-muted text-sm"
-                  ><timeago :datetime="item.created_at"></timeago>
-                </span> </a
-            ></router-link>
-            <div class="dropdown-divider"></div>
-          </div>
-
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer"
-            >See All Notifications</a
-          >
-        </div>
+        <notificationOrder></notificationOrder>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -169,9 +149,12 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import Pusher from "pusher-js";
+import notificationOrder from "./notificationOrder";
 export default {
   name: "navbar",
+  components: {
+    notificationOrder,
+  },
   data() {
     return {};
   },
@@ -181,11 +164,11 @@ export default {
     },
   },
   methods: {
-    getinfo(item) {
+    getinfo(index, item) {
       // console.log(item);
-      this.$store.commit("getinfo", item);
+      this.$store.commit("getinfo", [index, item]);
     },
-    ...mapActions(["loadItems", "flightline", "loadCountries"]),
+    ...mapActions(["loadItems", "flightline", "loadCountries", "socketAdmin"]),
   },
 
   created() {
@@ -207,23 +190,13 @@ export default {
       "https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css"
     );
     document.head.appendChild(linkSemantic);
+    let channel = this.$pusher.subscribe("private-notification-admin");
 
-    let pusher = new Pusher("hello", {
-      forceTLS: false,
-      cluster: "mt1",
-      encrypted: false,
-      auth: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      authEndpoint: "http://127.0.0.1:8000/api/broadcasting/auth",
+    channel.bind("App\\Events\\AdminNotificationEvent", (data) => {
+      this.socketAdmin(data[0]);
     });
 
-    //Subscribe to the channel we specified in our Adonis Application
-    let channel = pusher.subscribe("notifications");
-
-    channel.bind("App\\Events\\NotificationsEvent", (data) => {
-      console.log(data);
-    });
+    // //Subscribe to the channel we specified in our Adonis Application
   },
 };
 </script>

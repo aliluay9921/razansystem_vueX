@@ -272,6 +272,9 @@ export default {
     this.dropdownFlightLine = this.flightlines;
   },
   computed: {
+    items() {
+      return this.$store.state.items;
+    },
     countries() {
       return this.$store.state.countries;
     },
@@ -283,6 +286,9 @@ export default {
     },
     selected_order() {
       return this.$store.state.selected_order;
+    },
+    notification_index() {
+      return this.$store.state.notification_index;
     },
   },
   methods: {
@@ -301,6 +307,8 @@ export default {
       });
 
       this.$store.dispatch("storeFlightPlan", data);
+      this.items.splice(this.notification_index, 1);
+      this.$router.back();
     },
     forceRerender() {
       this.render = false;
