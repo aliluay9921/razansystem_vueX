@@ -1,18 +1,45 @@
 <template>
   <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-    <span class="dropdown-item dropdown-header">اشعارات تسجيل حجوزات</span>
+    <span class="dropdown-item dropdown-header">اشعارات من الأدمن</span>
     <div class="dropdown-divider"></div>
     <div class="scrollable-menu">
-      <div v-for="(item, index) in items" :key="index">
-        <router-link to="/flightplan">
-          <a href="#" class="dropdown-item" @click="getinfo(index, item.order)">
-            <i class="fa fa-user mr-2"></i>
-            {{ item.user.FullName == null ? "guest" : item.user.FullName }}
-            <span class="float-right text-muted text-sm"
-              ><timeago :datetime="item.created_at"></timeago>
-            </span> </a
-        ></router-link>
-        <div class="dropdown-divider"></div>
+      <div
+        class="dropdown-footer"
+        style="direction: rtl"
+        v-for="(item, index) in items"
+        :key="index"
+      >
+        <!-- Message Start -->
+        <div class="media">
+          <img
+            src="dist/img/user1-128x128.jpg"
+            alt="User Avatar"
+            class="img-size-50 mr-3 img-circle"
+          />
+          <div class="media-body" style="text-align: right; padding-right: 5px">
+            <h3 class="dropdown-item-title">
+              تنبيه من الأدمن
+              <span v-if="!item.seen" class="float-left"
+                ><button
+                  class="ui mini circular inverted green icon button"
+                  @click="markSeen(index, item)"
+                >
+                  <i class="check icon"></i></button
+              ></span>
+            </h3>
+            <p
+              class="text-sm"
+              :style="[item.seen ? { 'text-decoration': 'line-through' } : {}]"
+            >
+              {{ item.description }}
+            </p>
+            <p class="text-sm text-muted float-left">
+              <i class="far fa-clock ml-1"></i>
+              <timeago :datetime="item.created_at"></timeago>
+            </p>
+          </div>
+        </div>
+        <!-- Message End -->
       </div>
     </div>
 
@@ -34,7 +61,7 @@ import { mapActions } from "vuex";
 export default {
   components: {},
 
-  name: "notificationOrder",
+  name: "notificationAdmin",
   data() {
     return {
       limit: 0,
@@ -42,14 +69,14 @@ export default {
   },
   computed: {
     items() {
-      return this.$store.state.items;
+      return this.$store.state.adminNotification;
     },
     isNotLoading() {
       return this.$store.state.isNotLoading;
     },
   },
   mounted() {
-    $(".dropdown-menu > .dropdown-footer").on("click", function (event) {
+    $(".dropdown-menu").on("click", function (event) {
       var events = $._data(document, "events") || {};
       events = events.click || [];
       for (var i = 0; i < events.length; i++) {
@@ -72,16 +99,16 @@ export default {
   },
 
   methods: {
-    getinfo(index, item) {
+    markSeen(index, item) {
       // console.log(item);
-      this.$store.commit("getinfo", [index, item]);
+      this.$store.dispatch("markAsSeen", [index, item]);
     },
-    ...mapActions(["loadItems", "flightline", "loadCountries", "socketAdmin"]),
+    ...mapActions(["loadAdminNotification", "socketAdmin"]),
 
     infiniteHandler() {
       console.log(this.limit);
       this.limit = this.limit + 10;
-      this.$store.dispatch("loadItems", this.limit);
+      this.$store.dispatch("loadAdminNotification", this.limit);
     },
   },
 };

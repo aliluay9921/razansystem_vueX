@@ -1,13 +1,13 @@
 <template>
   <div class="content-wrapper">
-    <div class="card-header ">
-      <h3 class="card-title ">خطوط الطيران المتوفرة</h3>
+    <div class="card-header">
+      <h3 class="card-title">خطوط الطيران المتوفرة</h3>
     </div>
 
     <div class="container">
-      <div class="add mt-3 mb-3  float-right ">
+      <div class="add mt-3 mb-3 float-right">
         <button
-          class="addbtn btn btn-primary  "
+          class="addbtn btn btn-primary"
           data-toggle="modal"
           data-target="#addModel"
         >
@@ -35,7 +35,7 @@
 
               <button
                 @click="editPost(index)"
-                class=" m-1 w-25 btn btn-success"
+                class="m-1 w-25 btn btn-success"
                 data-toggle="modal"
                 data-target="#flightModal"
               >
@@ -46,7 +46,7 @@
         </tbody>
       </table>
       <div
-        class="modal fade "
+        class="modal fade"
         id="flightModal"
         tabindex="-1"
         role="dialog"
@@ -118,7 +118,7 @@
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">
@@ -145,7 +145,7 @@
                   placeholder="الاسم"
                 />
               </div>
-              <div class="form-group ">
+              <div class="form-group">
                 <label for="exampleInputPassword1">صورة</label>
                 <input
                   type="file"
@@ -211,7 +211,6 @@ export default {
       };
       //  if (this.image != null) data["image"] = this.image;
       this.$store.dispatch("createPost", data);
-      this.$store.dispatch("forceRerender");
     },
     saveitem() {
       let flight = this.flightlines[this.current];

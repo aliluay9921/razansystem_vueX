@@ -1,13 +1,14 @@
 <template>
   <div class="content-wrapper">
-    <div class="card-header ">
-      <h3 class="card-title ">خطوط الطيران المتوفرة</h3>
+    <div class="card-header">
+      <h3 class="card-title">خطوط الطيران المتوفرة</h3>
     </div>
 
     <div class="container">
-      <div class="add mt-3 mb-3  float-right ">
+      <div class="add mt-3 mb-3 float-right">
         <button
-          class="addbtn btn btn-primary  "
+          @click="addEmpty"
+          class="addbtn btn btn-primary"
           data-toggle="modal"
           data-target="#addModel"
         >
@@ -39,7 +40,7 @@
 
               <button
                 @click="editPost(index)"
-                class="mt-2 w-100  btn btn-success"
+                class="mt-2 w-100 btn btn-success"
                 data-toggle="modal"
                 data-target="#countryModal"
               >
@@ -51,7 +52,7 @@
       </table>
 
       <div
-        class="modal fade "
+        class="modal fade"
         id="countryModal"
         tabindex="-1"
         role="dialog"
@@ -151,12 +152,10 @@
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                اضافة دولة
-              </h5>
+              <h5 class="modal-title" id="exampleModalLabel">اضافة دولة</h5>
               <button
                 type="button"
                 class="close"
@@ -262,6 +261,15 @@ export default {
     ...mapActions(["loadCountries"]),
     deletePost(country) {
       this.$store.dispatch("deletecountry", country);
+    },
+    addEmpty() {
+      console.log("here");
+      this.code = "";
+      this.geo = "";
+      this.longName = "";
+      this.cityName = "";
+      this.NameArbic = "";
+      this.current = -1;
     },
     editPost(index) {
       console.log(index);
