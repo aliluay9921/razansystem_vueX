@@ -37,7 +37,7 @@ export default {
   name: "notificationOrder",
   data() {
     return {
-      limit: 10,
+      limit: 0,
     };
   },
   computed: {
@@ -49,7 +49,7 @@ export default {
     },
   },
   mounted() {
-    $(".dropdown-menu > .dropdown-footer").on("click", function (event) {
+    $(".dropdown-menu > .dropdown-footer").on("click", function(event) {
       var events = $._data(document, "events") || {};
       events = events.click || [];
       for (var i = 0; i < events.length; i++) {
@@ -62,7 +62,7 @@ export default {
           // delegated event selector (Emulating propagation)
           $(event.target)
             .parents(events[i].selector)
-            .each(function () {
+            .each(function() {
               events[i].handler.call(this, event);
             });
         }
@@ -86,7 +86,7 @@ export default {
   },
 };
 </script>
-<style >
+<style>
 .scrollable-menu {
   height: auto;
   max-height: 200px;

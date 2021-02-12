@@ -56,7 +56,7 @@
             </div>
           </div>
         </a>
-        <a class="active step">
+        <a class="active-one step">
           <img src="/image/boy.svg" alt="" />
           <div class="content">
             <div class="title">الاطفال</div>
@@ -251,7 +251,7 @@ export default {
   },
 
   mounted() {
-    $("document").ready(function () {
+    $("document").ready(function() {
       $(".dropdown").dropdown({
         clearable: true,
       });
@@ -281,7 +281,7 @@ export default {
     flightlines() {
       return this.$store.state.flightlines;
     },
-    splittedAirlines: function () {
+    splittedAirlines: function() {
       return this.airLines.split(",");
     },
     selected_order() {
@@ -298,8 +298,8 @@ export default {
       var keys = Object.keys(dataTable);
       var id = this.selected_order.id;
       console.log(keys);
-      keys.forEach(function (k) {
-        dataTable[k].forEach(function (v) {
+      keys.forEach(function(k) {
+        dataTable[k].forEach(function(v) {
           v["flight_id"] = k;
           v["order_id"] = id;
           data.push(v);
@@ -322,12 +322,12 @@ export default {
         this.dropDownRender = true;
       });
     },
-    getRandomInt: function (min, max) {
+    getRandomInt: function(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    airLinesChange: function () {
+    airLinesChange: function() {
       this.airLines = $(".airLines").val();
       var splitted = this.splittedAirlines;
       var keys = Object.keys(this.dataTable);
@@ -377,7 +377,7 @@ export default {
       // console.log($(".airLines").val());
       $(".airLines-dropdown").dropdown("remove selected", name);
     },
-    addTrip: function (name) {
+    addTrip: function(name) {
       // console.log(this.dataTable[name]);
       this.dataTable[name].push({
         from_port: "",
@@ -389,7 +389,7 @@ export default {
       });
       this.forceRerender();
     },
-    deleteTrip: function (name, index) {
+    deleteTrip: function(name, index) {
       this.dataTable[name].splice(index, 1);
       if (this.dataTable[name].length == 0) {
         delete this.dataTable[name];
@@ -467,10 +467,10 @@ img {
   margin-right: 80px;
   width: 50px;
 }
-.active {
+.active-one {
   background-color: #02b7b2 !important;
 }
-.active:after {
+.active-one:after {
   background: #02b7b2 !important;
 }
 .company {

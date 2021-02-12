@@ -5018,7 +5018,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = runTimeout(cleanUpNextTick);
+    var timeout = runTimeout(cleanUp);
     draining = true;
 
     var len = queue.length;

@@ -84,22 +84,26 @@
             <!-- </ul> -->
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Orders
-                <span class="right badge badge-danger">New</span>
-              </p>
-            </a>
+            <router-link to="/Countries">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                  Countries
+                  <span class="right badge badge-danger">New</span>
+                </p>
+              </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fa fa-plane"></i>
-              <p>
-                FlightLine
-                <span class="right badge badge-danger">New</span>
-              </p>
-            </a>
+            <router-link to="/flightLine">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fa fa-plane"></i>
+                <p>
+                  FlightLine
+                  <span class="right badge badge-danger">New</span>
+                </p>
+              </a>
+            </router-link>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
