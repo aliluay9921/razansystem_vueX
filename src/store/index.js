@@ -18,6 +18,9 @@ export default new Vuex.Store({
     isNotLoading: false,
     notification_index: -1,
     render: true,
+    bookingInfo: [],
+    select_booking: [],
+    dashboardCount: ''
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
@@ -25,9 +28,18 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    dashboardCount(state, data) {
+      console.log(data)
+      state.dashboardCount = data
+    },
     getinfo(state, item) {
+
       state.notification_index = item[0];
       state.selected_order = item[1];
+    },
+    sendinfo(state, item) {
+      console.log(item)
+      state.select_booking = item[1];
     },
     // ###################### auth process ######################33
     auth_request(state) {
@@ -53,6 +65,14 @@ export default new Vuex.Store({
       let index = state.adminNotification.length;
       data.forEach((e) => {
         Vue.set(state.adminNotification, index, e);
+        index++;
+      });
+    },
+    SET_booking_Item(state, data) {
+
+      let index = state.bookingInfo.length;
+      data.forEach((e) => {
+        Vue.set(state.bookingInfo, index, e);
         index++;
       });
     },
@@ -147,6 +167,14 @@ export default new Vuex.Store({
     async socketAdmin({ commit }, data) {
       commit("Add_Item", data);
     },
+    async countDashboard({ commit }) {
+      await axios
+        .get("http://127.0.0.1:8000/api/dashboardCount")
+        .then((response) => {
+          commit("dashboardCount", response.data.result);
+        });
+    },
+
     //flightplan
     async storeFlightPlan({ commit }, body) {
       //  let id = order.id;
@@ -169,6 +197,16 @@ export default new Vuex.Store({
         .get("http://127.0.0.1:8000/api/notifications_employee?skip=" + skip)
         .then((response) => {
           commit("SET_Item", response.data.result);
+        });
+      commit("toggleLoading", false);
+    },
+    async loadnotificationBooking({ commit }, skip = 0) {
+      commit("toggleLoading", true);
+      await axios
+        .get("http://127.0.0.1:8000/api/notificationsSelected?skip=" + skip)
+        .then((response) => {
+          commit("SET_booking_Item", response.data.result);
+          console.log(response.data.result)
         });
       commit("toggleLoading", false);
     },

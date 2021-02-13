@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import flightLine from '../views/flightLine.vue'
 import store from '../store/index'
 import FlightPlan from '../views/flightPlan.vue'
+import booking from '../views/booking.vue'
 import Countries from '../views/Countries.vue'
 import login from '../components/login.vue'
 Vue.use(VueRouter)
@@ -62,6 +63,12 @@ const routes = [
     component: Countries
   },
   {
+    path: '/booking',
+    name: 'booking',
+    component: booking,
+
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
@@ -76,7 +83,9 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 router.beforeEach((to, from, next) => {
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
       next()

@@ -9,11 +9,6 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a class="nav-link"> <router-link to="/">Home</router-link></a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link"
-          ><router-link to="/flightplan">flightplan</router-link></a
-        >
-      </li>
     </ul>
 
     <!-- SEARCH FORM -->
@@ -55,6 +50,16 @@
         </a>
         <notificationOrder></notificationOrder>
       </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-address-card"></i>
+          <span class="badge badge-warning navbar-badge">{{
+            bookingInfo.length
+          }}</span>
+        </a>
+        <notificationBooking></notificationBooking>
+      </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -79,11 +84,13 @@
 import { mapActions } from "vuex";
 import notificationOrder from "./notificationOrder";
 import notificationAdmin from "./notificationAdmin";
+import notificationBooking from "./notificationBooking";
 export default {
   name: "navbar",
   components: {
     notificationOrder,
     notificationAdmin,
+    notificationBooking,
   },
   data() {
     return {};
@@ -94,6 +101,9 @@ export default {
     },
     adminNotification() {
       return this.$store.state.adminNotification;
+    },
+    bookingInfo() {
+      return this.$store.state.bookingInfo;
     },
   },
   methods: {
@@ -107,6 +117,7 @@ export default {
       "loadAdminNotification",
       "loadCountries",
       "socketAdmin",
+      "loadnotificationBooking",
     ]),
   },
 
@@ -115,6 +126,7 @@ export default {
     this.flightline();
     this.loadAdminNotification();
     this.loadCountries();
+    this.loadnotificationBooking();
   },
   mounted() {
     let scriptSemantic = document.createElement("script");
