@@ -11,6 +11,7 @@ export default new Vuex.Store({
     user: {},
     items: [],
     flightlines: [],
+    positionAvailable: [],
     countries: [],
     adminNotification: [],
     selected_order: {},
@@ -67,6 +68,16 @@ export default new Vuex.Store({
       }
 
       // state.flightlines = data;
+    },
+    set_positionAvailable(state, data) {
+      // state.countries = data;
+      for (let index = 0; index < data.length; ++index) {
+        Vue.set(
+          state.positionAvailable,
+          state.positionAvailable.length,
+          data[index]
+        );
+      }
     },
     set_country(state, data) {
       // state.countries = data;
@@ -190,6 +201,14 @@ export default new Vuex.Store({
           commit("SET_Admin_Item", response.data.result);
         });
       commit("toggleLoading", false);
+    },
+    async loadPositionAvailable({ commit }, skip = 0) {
+      await axios
+        .get("http://127.0.0.1:8000/api/posation?skip=" + skip)
+        .then((response) => {
+          commit("set_positionAvailable", response.data.result);
+          console.log(response.data.result);
+        });
     },
     async loadCountries({ commit }) {
       await axios.get("http://127.0.0.1:8000/api/countary").then((response) => {
