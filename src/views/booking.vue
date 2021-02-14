@@ -22,7 +22,7 @@
       </div>
     </section>
     <section class="view-date">
-      <div class="ui left labeled button " tabindex="0">
+      <div class="ui left labeled button" tabindex="0">
         <a class="ui basic right pointing label">
           {{ data.order.flightplans[0].Arrival_time }}
         </a>
@@ -44,16 +44,14 @@
         <a class="ui basic right pointing label">
           {{ data.order.cabin }}
         </a>
-        <div class="ui button">
-          نوع درجة الطيران
-        </div>
+        <div class="ui button">نوع درجة الطيران</div>
       </div>
       <div class="ui left labeled button" tabindex="0">
         <a class="ui basic right pointing label">
           {{ data.order.flightplans[0].price }}
         </a>
         <div class="ui button">
-          <i class=" dollar sign icon "></i> السعر المطلوب
+          <i class="dollar sign icon"></i> السعر المطلوب
         </div>
       </div>
     </section>
@@ -63,9 +61,7 @@
         <a class="ui basic right pointing label">
           {{ data.flight_line.name }}
         </a>
-        <div class="ui button">
-          شركة الطيران
-        </div>
+        <div class="ui button">شركة الطيران</div>
       </div>
     </section>
     <section class="table">
@@ -104,6 +100,9 @@ export default {
     return {
       local: "http://127.0.0.1:8000",
     };
+  },
+  mounted() {
+    if (this.data.length == 0) this.$router.go(-1);
   },
   computed: {
     data() {

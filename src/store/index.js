@@ -14,14 +14,15 @@ export default new Vuex.Store({
     positionAvailable: [],
     countries: [],
     adminNotification: [],
-    selected_order: {},
+    selected_order: null,
     storeSucess: false,
     isNotLoading: false,
     notification_index: -1,
     render: true,
     bookingInfo: [],
     select_booking: [],
-    dashboardCount: ''
+    dashboardCount: {},
+    chartdata: {},
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
@@ -30,16 +31,38 @@ export default new Vuex.Store({
 
   mutations: {
     dashboardCount(state, data) {
-      console.log(data)
-      state.dashboardCount = data
+      // //console.log(data);
+      state.dashboardCount = data;
+      state.chartdata = {
+        labels: [],
+        datasets: [
+          {
+            label: "زبائن مسجلين",
+            borderColor: "#FC2525",
+            pointBackgroundColor: "white",
+            borderWidth: 1,
+            pointBorderColor: "white",
+
+            data: state.dashboardCount.userCount,
+          },
+          {
+            label: "حجوزات منشئة",
+            borderColor: "#05CBE1",
+            pointBackgroundColor: "white",
+            pointBorderColor: "white",
+            borderWidth: 1,
+
+            data: state.dashboardCount.orderCount,
+          },
+        ],
+      };
     },
     getinfo(state, item) {
-
       state.notification_index = item[0];
       state.selected_order = item[1];
     },
     sendinfo(state, item) {
-      console.log(item)
+      // //console.log(item);
       state.select_booking = item[1];
     },
     // ###################### auth process ######################33
@@ -70,7 +93,6 @@ export default new Vuex.Store({
       });
     },
     SET_booking_Item(state, data) {
-
       let index = state.bookingInfo.length;
       data.forEach((e) => {
         Vue.set(state.bookingInfo, index, e);
@@ -78,7 +100,7 @@ export default new Vuex.Store({
       });
     },
     Add_Item(state, data) {
-      console.log(data);
+      //console.log(data);
       if (data.type == 0) state.items.unshift(data);
       else if (data.type == 2) state.adminNotification.unshift(data);
     },
@@ -117,21 +139,21 @@ export default new Vuex.Store({
     },
 
     DELETE_POST(state, flightline) {
-      console.log(flightline);
+      // //console.log(flightline);
       let index = state.flightlines.findIndex(
         (flightlines) => flightlines.id === flightline.id
       );
-      // console.log(index);
+      // //console.log(index);
 
       state.flightlines.splice(index, 1);
     },
 
     DELETE_countary(state, country) {
-      console.log(country);
+      //console.log(country);
       let index = state.countries.findIndex(
         (countries) => countries.id === country.id
       );
-      // console.log(index);
+      // //console.log(index);
 
       state.countries.splice(index, 1);
     },
@@ -142,12 +164,12 @@ export default new Vuex.Store({
       const index = state.flightlines.findIndex(
         (todo) => todo.id === flightline.id
       );
-      console.log(index);
-      console.log(flightline);
+      //console.log(index);
+      //console.log(flightline);
       if (index !== -1) {
         Vue.set(state.flightlines, index, flightline);
         // state.flightlines[index] = flightline //.splice(index, 1, flightline);
-        console.log(flightline);
+        //console.log(flightline);
       }
     },
     updatecountry: (state, countary) => {
@@ -160,12 +182,12 @@ export default new Vuex.Store({
     },
 
     CREATE_POST(state, data) {
-      console.log(data);
+      //console.log(data);
       state.flightlines.push(data);
     },
 
     CREATE_country(state, data) {
-      console.log(data);
+      //console.log(data);
       state.countries.push(data);
     },
     update_notification(state, data) {
@@ -189,16 +211,16 @@ export default new Vuex.Store({
     //flightplan
     async storeFlightPlan({ commit }, body) {
       //  let id = order.id;
-      // console.log(id);
-      console.log(body);
+      // //console.log(id);
+      //console.log(body);
       // data["order_id"]=id;
 
       await axios
         .post("http://127.0.0.1:8000/api/flightplan", body)
-        .then((response) => {
-          console.log(response.data);
+        .then(() => {
+          //console.log(response.data);
           commit("store_flightPlan", true);
-          // console.log(response);
+          // //console.log(response);
           // commit();
         });
     },
@@ -217,7 +239,7 @@ export default new Vuex.Store({
         .get("http://127.0.0.1:8000/api/notificationsSelected?skip=" + skip)
         .then((response) => {
           commit("SET_booking_Item", response.data.result);
-          console.log(response.data.result)
+          //console.log(response.data.result);
         });
       commit("toggleLoading", false);
     },
@@ -245,13 +267,13 @@ export default new Vuex.Store({
         .get("http://127.0.0.1:8000/api/posation?skip=" + skip)
         .then((response) => {
           commit("set_positionAvailable", response.data.result);
-          console.log(response.data.result);
+          //console.log(response.data.result);
         });
     },
     async loadCountries({ commit }) {
       await axios.get("http://127.0.0.1:8000/api/countary").then((response) => {
         commit("set_country", response.data.result);
-        console.log(response.data.result);
+        //console.log(response.data.result);
       });
     },
     async flightline({ commit }) {
@@ -259,7 +281,7 @@ export default new Vuex.Store({
         .get("http://127.0.0.1:8000/api/flightline")
         .then((response) => {
           commit("set_flightLine", response.data.result);
-          console.log(response.data.result);
+          //console.log(response.data.result);
         });
     },
     //#####################################################  login process #####################################################
@@ -321,7 +343,7 @@ export default new Vuex.Store({
     },
 
     async updateitem({ commit }, data) {
-      console.log(data);
+      //console.log(data);
       await axios
         .put("http://127.0.0.1:8000/api/flightline", data)
         .then((response) => {
@@ -329,7 +351,7 @@ export default new Vuex.Store({
         });
     },
     async updatecountry({ commit }, data) {
-      console.log(data);
+      // //console.log(data);
       await axios
         .put("http://127.0.0.1:8000/api/countary", data)
         .then((response) => {
@@ -337,21 +359,21 @@ export default new Vuex.Store({
         });
     },
     createPost({ commit }, data) {
-      console.log(data);
+      // //console.log(data);
       axios
         .post("http://127.0.0.1:8000/api/flightline", data)
         .then((response) => {
           commit("CREATE_POST", response.data.result[0]);
-          // console.log(response.data)
+          // //console.log(response.data)
         });
     },
     createcountry({ commit }, data) {
-      console.log(data);
+      // //console.log(data);
       axios
         .post("http://127.0.0.1:8000/api/countary", data)
         .then((response) => {
           commit("CREATE_country", response.data.result[0]);
-          console.log(response.data);
+          // //console.log(response.data);
         });
     },
   },

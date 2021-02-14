@@ -95,7 +95,11 @@
       </div>
       <!-- /.container-fluid -->
     </section>
-    <chart></chart>
+    <chart
+      v-if="dashboardCount.userCount != null"
+      :chartdata="chartdata"
+      :options="options"
+    ></chart>
     <!-- /.content -->
   </div>
 </template>
@@ -110,12 +114,108 @@ export default {
   },
   computed: {
     ...mapState(["dashboardCount"]),
+    chartdata() {
+      let chatData = this.$store.state.chartdata;
+      chatData.labels = this.getSevenDays;
+      return chatData;
+    },
+    getSevenDays() {
+      let date = new Date();
+      let days = [];
+      for (let index = 0; index < 7; index++) {
+        var result = date;
+        result.setDate(result.getDate() - index);
+        var dateToday =
+          result.getFullYear() +
+          "-" +
+          (result.getMonth() + 1) +
+          "-" +
+          result.getDate();
+        days.unshift(this.days[result.getDay()] + "\n " + dateToday);
+      }
+      console.log(days);
+      return days;
+    },
   },
   methods: {
     ...mapActions(["countDashboard"]),
   },
   created() {
+    // this.chartdata = {
+    //   labels: this.getSevenDays,
+    //   datasets: [
+    //     {
+    //       label: "زبائن مسجلين",
+    //       borderColor: "#FC2525",
+    //       pointBackgroundColor: "white",
+    //       borderWidth: 1,
+    //       pointBorderColor: "white",
+
+    //       data: [40, 30, 30, 22, 4, 5, 21],
+    //     },
+    //     {
+    //       label: "حجوزات منشئة",
+    //       borderColor: "#05CBE1",
+    //       pointBackgroundColor: "white",
+    //       pointBorderColor: "white",
+    //       borderWidth: 1,
+
+    //       data: [30, 50, 40, 1, 10, 0, 20],
+    //     },
+    //     // {
+    //     //   label: "Data One",
+    //     //   backgroundColor: "#f8ff32",
+    //     //   data: [40, 20],
+    //     // },
+    //   ],
+    // };
     this.countDashboard();
+  },
+  data() {
+    return {
+      months: [
+        "يناير",
+        "فبراير",
+        "مارس",
+        "إبريل",
+        "مايو",
+        "يونيو",
+        "يوليو",
+        "أغسطس",
+        "سبتمبر",
+        "أكتوبر",
+        "نوفمبر",
+        "ديسمبر",
+      ],
+
+      days: [
+        "اﻷحد",
+        "اﻷثنين",
+        "الثلاثاء",
+        "اﻷربعاء",
+        "الخميس",
+        "الجمعة",
+        "السبت",
+      ],
+      sevenDays: ["test"],
+      // chartdata: {},
+      options: {
+        scales: {
+          yAxes: [
+            {
+              display: true,
+              ticks: {
+                suggestedMin: 0, // minimum will be 0, unless there is a lower value.
+                // OR //
+                beginAtZero: true, // minimum value will be 0.
+              },
+            },
+          ],
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    };
   },
 };
 </script>
