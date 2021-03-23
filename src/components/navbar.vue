@@ -118,6 +118,8 @@ export default {
       "loadCountries",
       "socketAdmin",
       "loadnotificationBooking",
+      "discount",
+      "posationAvailables",
     ]),
   },
 
@@ -127,6 +129,8 @@ export default {
     this.loadAdminNotification();
     this.loadCountries();
     this.loadnotificationBooking();
+    this.discount();
+    this.posationAvailables();
   },
   mounted() {
     let scriptSemantic = document.createElement("script");

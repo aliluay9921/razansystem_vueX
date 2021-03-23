@@ -7,7 +7,8 @@
         <router-link to="/flightplan">
           <a href="#" class="dropdown-item" @click="getinfo(index, item.order)">
             <i class="fa fa-user mr-2"></i>
-            {{ item.user.FullName == null ? "guest" : item.user.FullName }}
+            {{ item.user.firstName == null ? "guest" : item.user.firstName
+            }}{{ item.user.lastName == null ? "guest" : item.user.lastName }}
             <span class="float-right text-muted text-sm"
               ><timeago :datetime="item.created_at"></timeago>
             </span> </a
@@ -49,7 +50,7 @@ export default {
     },
   },
   mounted() {
-    $(".dropdown-menu > .dropdown-footer").on("click", function (event) {
+    $(".dropdown-menu > .dropdown-footer").on("click", function(event) {
       var events = $._data(document, "events") || {};
       events = events.click || [];
       for (var i = 0; i < events.length; i++) {
@@ -62,7 +63,7 @@ export default {
           // delegated event selector (Emulating propagation)
           $(event.target)
             .parents(events[i].selector)
-            .each(function () {
+            .each(function() {
               events[i].handler.call(this, event);
             });
         }

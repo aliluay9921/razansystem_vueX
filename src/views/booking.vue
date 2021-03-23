@@ -41,8 +41,11 @@
     </section>
     <section class="view-type">
       <div class="ui left labeled button" tabindex="0">
-        <a class="ui basic right pointing label">
-          {{ data.order.cabin }}
+        <a v-if="data.order.cabin == 1" class="ui basic right pointing label">
+          درجة اولى
+        </a>
+        <a v-else class="ui basic right pointing label">
+          سياحي
         </a>
         <div class="ui button">
           نوع درجة الطيران
@@ -68,11 +71,28 @@
         </div>
       </div>
     </section>
+    <div class="pnr">
+      <div class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+          <input
+            type="text"
+            v-model="PNR"
+            class="form-control"
+            placeholder="PNR"
+          />
+        </div>
+        <button @click="savedata" type="submit" class="btn btn-primary mb-2">
+          PNR ارسل
+        </button>
+      </div>
+    </div>
+
     <section class="table">
       <table class="ui celled table">
         <thead>
           <tr>
-            <th>الاسم</th>
+            <th>الاسم الاؤل</th>
+            <th>الاسم الثاني</th>
             <th>تاريخ الولادة</th>
             <th>الجنس</th>
             <th>النوع</th>
@@ -82,7 +102,8 @@
         </thead>
         <tbody>
           <tr v-for="(person, index) in data.order.passengers" :key="index">
-            <td data-label="Name">{{ person.name }}</td>
+            <td data-label="firstName">{{ person.first_name }}</td>
+            <td data-label="lastName">{{ person.last_name }}</td>
             <td data-label="Age">{{ person.birth_day }}</td>
             <td data-label="Job">{{ person.gender }}</td>
             <td data-label="Name">{{ person.type }}</td>
@@ -103,16 +124,31 @@ export default {
   data() {
     return {
       local: "http://127.0.0.1:8000",
+      PNR: "",
     };
   },
+
   computed: {
     data() {
       return this.$store.state.select_booking;
     },
   },
+  methods: {
+    savedata() {
+      let data = {
+        PNR: this.PNR,
+        id: this.data.order.id,
+      };
+      this.$store.dispatch("createPNR", data);
+    },
+  },
 };
 </script>
 <style>
+.pnr {
+  margin-top: 50px;
+  margin-left: 500px;
+}
 .details {
   text-align: right;
   padding: 20px;
@@ -160,7 +196,7 @@ export default {
 }
 .table {
   width: 50%;
-  margin-top: 90px;
+  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
   direction: rtl;

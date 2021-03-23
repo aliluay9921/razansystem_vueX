@@ -255,7 +255,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["countries"]),
+    ...mapState(["countries", "render"]),
   },
   methods: {
     ...mapActions(["loadCountries"]),

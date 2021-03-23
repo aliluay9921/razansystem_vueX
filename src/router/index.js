@@ -7,6 +7,9 @@ import FlightPlan from '../views/flightPlan.vue'
 import booking from '../views/booking.vue'
 import Countries from '../views/Countries.vue'
 import login from '../components/login.vue'
+import discount from '../views/discountFlight.vue'
+import posationAvailable from '../views/posationAvailable.vue'
+import issus from '../views/issusTicket.vue'
 Vue.use(VueRouter)
 Vue.use(require('vue-pusher'),
   {
@@ -58,6 +61,16 @@ const routes = [
     component: flightLine
   },
   {
+    path: '/discount',
+    name: 'discount',
+    component: discount
+  },
+  {
+    path: '/posationAvailable',
+    name: 'posationAvailable',
+    component: posationAvailable
+  },
+  {
     path: '/Countries',
     name: 'Countries',
     component: Countries
@@ -69,12 +82,9 @@ const routes = [
 
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/issus',
+    name: 'issus',
+    component: issus,
   }
 ]
 

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -20,7 +21,10 @@ export default new Vuex.Store({
     render: true,
     bookingInfo: [],
     select_booking: [],
-    dashboardCount: ''
+    dashboardCount: '',
+    discountFlights: [],
+    posationAvailables: [],
+    PNR: ""
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
@@ -77,21 +81,30 @@ export default new Vuex.Store({
       });
     },
     Add_Item(state, data) {
-      console.log(data);
       if (data.type == 0) state.items.unshift(data);
       else if (data.type == 2) state.adminNotification.unshift(data);
+      else if (data.type == 5) state.bookingInfo.unshift(data);
+
     },
     set_flightLine(state, data) {
       for (let index = 0; index < data.length; index++) {
         Vue.set(state.flightlines, index, data[index]);
       }
-
-      // state.flightlines = data;
     },
     set_country(state, data) {
-      // state.countries = data;
-      for (let index = 0; index < data.length; ++index) {
+      for (let index = 0; index < data.length; index++) {
         Vue.set(state.countries, index, data[index]);
+      }
+    },
+    set_discount(state, data) {
+
+      for (let index = 0; index < data.length; ++index) {
+        Vue.set(state.discountFlights, index, data[index]);
+      }
+    },
+    posationAvailables(state, data) {
+      for (let index = 0; index < data.length; ++index) {
+        Vue.set(state.posationAvailables, index, data[index]);
       }
     },
     store_flightPlan(state, data) {
@@ -110,9 +123,15 @@ export default new Vuex.Store({
       let index = state.flightlines.findIndex(
         (flightlines) => flightlines.id === flightline.id
       );
-      // console.log(index);
-
       state.flightlines.splice(index, 1);
+    },
+
+    DELETE_discount(state, discount) {
+      console.log(discount);
+      let index = state.discountFlights.findIndex(
+        (discountFlights) => discountFlights.id === discount.id
+      );
+      state.discountFlights.splice(index, 1);
     },
 
     DELETE_countary(state, country) {
@@ -120,23 +139,22 @@ export default new Vuex.Store({
       let index = state.countries.findIndex(
         (countries) => countries.id === country.id
       );
-      // console.log(index);
-
       state.countries.splice(index, 1);
+    },
+    DELETE_posationAvailable(state, posationAvailable) {
+      console.log(posationAvailable);
+      let index = state.posationAvailables.findIndex(
+        (posationAvailables) => posationAvailables.id === posationAvailable.id
+      );
+      state.posationAvailables.splice(index, 1);
     },
 
     updateitem: (state, flightline) => {
-      // Find index
-
       const index = state.flightlines.findIndex(
         (todo) => todo.id === flightline.id
       );
-      console.log(index);
-      console.log(flightline);
       if (index !== -1) {
         Vue.set(state.flightlines, index, flightline);
-        // state.flightlines[index] = flightline //.splice(index, 1, flightline);
-        console.log(flightline);
       }
     },
     updatecountry: (state, countary) => {
@@ -148,20 +166,44 @@ export default new Vuex.Store({
       }
     },
 
+    updateDiscount: (state, discount) => {
+      const index = state.discountFlights.findIndex(
+        (todo) => todo.id === discount.id
+      );
+      if (index !== -1) {
+        Vue.set(state.discountFlights, index, discount);
+      }
+    },
+    updatePosationAvailables: (state, PosationAvailable) => {
+      const index = state.PosationAvailables.findIndex(
+        (todo) => todo.id === PosationAvailable.id
+      );
+      if (index !== -1) {
+        Vue.set(state.PosationAvailables, index, PosationAvailable);
+      }
+    },
+
     CREATE_POST(state, data) {
-      console.log(data);
       state.flightlines.push(data);
     },
 
     CREATE_country(state, data) {
-      console.log(data);
       state.countries.push(data);
+    },
+    CREATE_DISCOUNT(state, data) {
+      state.discountFlights.push(data);
+    },
+    CREATE_posationAvailables(state, data) {
+      state.posationAvailables.push(data);
     },
     update_notification(state, data) {
       let item = data[1];
       item.seen = data[2];
       Vue.set(state.adminNotification, data[0], item);
     },
+    CREATEPNR(state, data) {
+      state.PNR = data
+    }
   },
   actions: {
     async socketAdmin({ commit }, data) {
@@ -206,7 +248,6 @@ export default new Vuex.Store({
         .get("http://127.0.0.1:8000/api/notificationsSelected?skip=" + skip)
         .then((response) => {
           commit("SET_booking_Item", response.data.result);
-          console.log(response.data.result)
         });
       commit("toggleLoading", false);
     },
@@ -232,17 +273,37 @@ export default new Vuex.Store({
     async loadCountries({ commit }) {
       await axios.get("http://127.0.0.1:8000/api/countary").then((response) => {
         commit("set_country", response.data.result);
-        console.log(response.data.result);
       });
     },
+
+
     async flightline({ commit }) {
       await axios
         .get("http://127.0.0.1:8000/api/flightline")
         .then((response) => {
           commit("set_flightLine", response.data.result);
-          console.log(response.data.result);
+
         });
     },
+    async discount({ commit }) {
+      await axios
+        .get("http://127.0.0.1:8000/api/discount")
+        .then((response) => {
+          commit("set_discount", response.data.result);
+          console.log(response.data.result)
+        });
+    },
+    async posationAvailables({ commit }) {
+      await axios
+        .get("http://127.0.0.1:8000/api/posation")
+        .then((response) => {
+          commit("posationAvailables", response.data.result);
+          console.log(response.data.result)
+        });
+    },
+
+
+
     //#####################################################  login process #####################################################
     login({ commit }, UserName) {
       return new Promise((resolve, reject) => {
@@ -289,6 +350,18 @@ export default new Vuex.Store({
           commit("DELETE_POST", flightline);
         });
     },
+
+    deleteDiscount({ commit }, discount) {
+      axios
+        .delete("http://127.0.0.1:8000/api/discount", {
+          data: {
+            id: discount.id,
+          },
+        })
+        .then(() => {
+          commit("DELETE_discount", discount);
+        });
+    },
     deletecountry({ commit }, country) {
       axios
         .delete("http://127.0.0.1:8000/api/countary", {
@@ -300,9 +373,19 @@ export default new Vuex.Store({
           commit("DELETE_countary", country);
         });
     },
+    deletePosationAvailables({ commit }, posationAvailable) {
+      axios
+        .delete("http://127.0.0.1:8000/api/posation", {
+          data: {
+            id: posationAvailable.id,
+          },
+        })
+        .then(() => {
+          commit("DELETE_posationAvailable", posationAvailable);
+        });
+    },
 
     async updateitem({ commit }, data) {
-      console.log(data);
       await axios
         .put("http://127.0.0.1:8000/api/flightline", data)
         .then((response) => {
@@ -315,6 +398,20 @@ export default new Vuex.Store({
         .put("http://127.0.0.1:8000/api/countary", data)
         .then((response) => {
           commit("updatecountary", response.data.result[0]);
+        });
+    },
+    async updateDiscount({ commit }, data) {
+      await axios
+        .put("http://127.0.0.1:8000/api/discount", data)
+        .then((response) => {
+          commit("updateDiscount", response.data.result[0]);
+        });
+    },
+    async updatePosationAvailables({ commit }, data) {
+      await axios
+        .put("http://127.0.0.1:8000/api/posation", data)
+        .then((response) => {
+          commit("updatePosationAvailables", response.data.result[0]);
         });
     },
     createPost({ commit }, data) {
@@ -335,5 +432,33 @@ export default new Vuex.Store({
           console.log(response.data);
         });
     },
+    createDiscount({ commit }, data) {
+      axios
+        .post("http://127.0.0.1:8000/api/discount", data)
+        .then((response) => {
+
+          commit("CREATE_DISCOUNT", response.data.result[0]);
+          console.log(response.data.result[0]);
+
+        });
+    },
+    createPosationAvailables({ commit }, data) {
+      axios
+        .post("http://127.0.0.1:8000/api/posation", data)
+        .then((response) => {
+
+          commit("CREATE_PosationAvailables", response.data.result[0]);
+          console.log(response.data.result[0]);
+
+        });
+    },
+    createPNR({ commit }, data) {
+      axios
+        .post("http://127.0.0.1:8000/api/savePNR", data)
+        .then((response) => {
+          commit("CREATEPNR", response.data.result);
+        });
+    }
+
   },
 });
