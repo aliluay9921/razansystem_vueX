@@ -5,7 +5,13 @@
 
       <p>قم بالبحث على الحجوزات لأصدار التكت الخاص بالمستخدم</p>
     </div>
-    <section class="table table-hover table-bordered mt-5">
+    <div class="search">
+      <div class="form-group">
+        <label for="">البحث عن حجز</label>
+        <input type="text" v-model="search" class="form-control" />
+      </div>
+    </div>
+    <section class="table table-hover table-bordered mt-3">
       <table class="ui celled table">
         <thead>
           <tr>
@@ -13,7 +19,6 @@
             <th>من</th>
             <th>الى</th>
             <th>نوع درجة الطيران</th>
-
             <th>عمليات</th>
           </tr>
         </thead>
@@ -92,6 +97,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      search: "",
       tecket_number: "",
       current: -1,
     };
@@ -100,6 +106,11 @@ export default {
     ...mapState(["orderPnr"]),
   },
   methods: {
+    // searchData() {
+    //   return this.orderPnr.filter((data) => {
+    //     return Boolean;
+    //   });
+    // },
     getData(index) {
       this.current = index;
     },
@@ -118,5 +129,10 @@ export default {
 <style>
 .operations {
   width: 600px !important;
+}
+.search {
+  margin-top: 50px;
+  width: 300px;
+  margin-left: 500px;
 }
 </style>
