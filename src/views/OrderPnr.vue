@@ -104,13 +104,13 @@ export default {
   },
   computed: {
     ...mapState(["orderPnr"]),
+    searchData() {
+      return this.orderPnr.filter((data) => {
+        return data.orderPnr.PNR.match(this.search);
+      });
+    },
   },
   methods: {
-    // searchData() {
-    //   return this.orderPnr.filter((data) => {
-    //     return Boolean;
-    //   });
-    // },
     getData(index) {
       this.current = index;
     },
