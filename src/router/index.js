@@ -9,7 +9,7 @@ import Countries from '../views/Countries.vue'
 import login from '../components/login.vue'
 import discount from '../views/discountFlight.vue'
 import posationAvailable from '../views/posationAvailable.vue'
-import issus from '../views/issusTicket.vue'
+import orderPnr from '../views/OrderPnr.vue'
 Vue.use(VueRouter)
 Vue.use(require('vue-pusher'),
   {
@@ -82,9 +82,9 @@ const routes = [
 
   },
   {
-    path: '/issus',
-    name: 'issus',
-    component: issus,
+    path: '/orderPnr',
+    name: 'orderPnr',
+    component: orderPnr,
   }
 ]
 

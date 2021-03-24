@@ -71,6 +71,7 @@
         </div>
       </div>
     </section>
+
     <div class="pnr">
       <div class="form-inline">
         <div class="form-group mx-sm-3 mb-2">
@@ -110,7 +111,12 @@
             <td data-label="Age">{{ person.passport_No }}</td>
             <td data-label="Job">
               <a href="1.jpg">
-                <img :src="local + person.picture_passport" alt="image" />
+                <img
+                  :src="local + person.picture_passport"
+                  alt="image"
+                  height="50px"
+                  width="50px"
+                />
               </a>
             </td>
           </tr>
@@ -139,7 +145,8 @@ export default {
         PNR: this.PNR,
         id: this.data.order.id,
       };
-      this.$store.dispatch("createPNR", data);
+      this.$store.dispatch("create_pnr", data);
+      this.PNR = "";
     },
   },
 };

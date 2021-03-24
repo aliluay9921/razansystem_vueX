@@ -1,10 +1,6 @@
 <template>
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
-
-    <a
-      href="index3.html"
-      class="brand-link"
-    >
+    <a href="index3.html" class="brand-link">
       <img
         src="dist/img/AdminLTELogo.png"
         alt="AdminLTE Logo"
@@ -26,19 +22,13 @@
           />
         </div>
         <div class="info">
-          <a
-            href="#"
-            class="d-block"
-          >Admin</a>
+          <a href="#" class="d-block">Admin</a>
         </div>
       </div>
 
       <!-- SidebarSearch Form -->
       <div class="form-inline">
-        <div
-          class="input-group"
-          data-widget="sidebar-search"
-        >
+        <div class="input-group" data-widget="sidebar-search">
           <input
             class="form-control form-control-sidebar"
             type="search"
@@ -87,10 +77,7 @@
 
           <li class="nav-item">
             <router-link to="/Countries">
-              <a
-                href="#"
-                class="nav-link"
-              >
+              <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-th"></i>
                 <p>
                   الدول
@@ -100,10 +87,7 @@
           </li>
           <li class="nav-item">
             <router-link to="/flightLine">
-              <a
-                href="#"
-                class="nav-link"
-              >
+              <a href="#" class="nav-link">
                 <i class="nav-icon fa fa-plane"></i>
                 <p>
                   شركات الطيران
@@ -113,10 +97,7 @@
           </li>
           <li class="nav-item">
             <router-link to="/discount">
-              <a
-                href="#"
-                class="nav-link"
-              >
+              <a href="#" class="nav-link">
                 <i class="nav-icon fa fa-envelope-open"></i>
                 <p>
                   العروض
@@ -126,10 +107,7 @@
           </li>
           <li class="nav-item  ">
             <router-link to="/posationAvailable">
-              <a
-                href="#"
-                class="nav-link"
-              >
+              <a href="#" class="nav-link">
                 <i class="map marker alternate icon "></i>
 
                 <p>
@@ -138,15 +116,21 @@
               </a>
             </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item  ">
+            <router-link to="/orderPnr">
+              <a href="#" class="nav-link">
+                <i class="map marker alternate icon "></i>
 
-            <a
-              @click="logout"
-              class="nav-link"
-            >
+                <p>
+                  الحجوزات
+                </p>
+              </a>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <a @click="logout" class="nav-link">
               <i class="sign in alternate icon"></i>
               تسجيل خروج
-
             </a>
           </li>
         </ul>
@@ -159,7 +143,7 @@
 <script>
 export default {
   methods: {
-    logout: function () {
+    logout: function() {
       this.$store.dispatch("logout").then(() => {
         this.$router.push("/login");
       });
