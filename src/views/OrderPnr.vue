@@ -5,7 +5,7 @@
 
       <p>قم بالبحث على الحجوزات لأصدار التكت الخاص بالمستخدم</p>
     </div>
-    <div class="search">
+    <!-- <div class="search">
       <div class="form-group">
         <label for="">البحث عن حجز</label>
         <input type="text" v-model="search" class="form-control" />
@@ -89,14 +89,72 @@
           </div>
         </div>
       </table>
-    </section>
+    </section> -->
+    <div>
+      <div class="d-flex justify-content-center mt-5">
+        <div class="form-group col-8">
+          <vue-good-table
+            :columns="columns"
+            :rows="rows"
+            :pagination-options="{
+              enabled: true,
+            }"
+          ></vue-good-table>
+        </div>
+      </div>
+
+      <!-- 
+:search-options="{
+          enabled: true,
+          trigger: 'key-up',
+          skipDiacritics: true,
+          placeholder: 'Search this table',
+        }"
+
+       -->
+    </div>
   </div>
 </template>
 <script>
+import "vue-good-table/dist/vue-good-table.css";
+import { VueGoodTable } from "vue-good-table";
+
 import { mapState } from "vuex";
+import Vue from "vue";
 export default {
+  components: {
+    VueGoodTable,
+  },
   data() {
     return {
+      columns: [
+        {
+          label: "من",
+          field: "from",
+          filterOptions: { enabled: false },
+        },
+        {
+          label: "الى",
+          field: "to",
+          filterOptions: { enabled: false },
+          // type: "string",
+        },
+        {
+          label: "درجة طيران",
+          field: "flight_type",
+          filterOptions: { enabled: false },
+          // type: "date",
+          // dateInputFormat: "yyyy-MM-dd",
+          // dateOutputFormat: "MMM do yy",
+        },
+        {
+          label: "PNR كود الـ",
+          field: "pnr",
+          filterOptions: { enabled: true },
+          // type: "string",
+        },
+      ],
+      // rows: [],
       search: "",
       tecket_number: "",
       current: -1,
@@ -109,7 +167,21 @@ export default {
         return data.orderPnr.PNR.match(this.search);
       });
     },
+    rows() {
+      let row_data = Array();
+      this.orderPnr.forEach((element) => {
+        let item = {
+          from: element.from_location.longName,
+          to: element.to_location.longName,
+          flight_type: element.cabin == 0 ? "أقتصادي" : "رجال أعمال",
+          pnr: element.pnr,
+        };
+        Vue.set(row_data, 0, item);
+      });
+      return row_data;
+    },
   },
+
   methods: {
     getData(index) {
       this.current = index;

@@ -5,9 +5,7 @@
     </div>
     <div class="container">
       <div class="card">
-        <div class="card-header">
-          passenger detail
-        </div>
+        <div class="card-header">passenger detail</div>
         <div class="card-body">
           <table>
             <thead>
@@ -30,9 +28,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-header">
-          TRAVEL INFORMAION
-        </div>
+        <div class="card-header">TRAVEL INFORMAION</div>
         <div class="card-body">
           <table>
             <thead>
