@@ -1,13 +1,14 @@
 <template>
   <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-    <span class="dropdown-item dropdown-header">اشعارات تسجيل حجوزات</span>
+    <span class="dropdown-item dropdown-header">تبليغات المدير</span>
     <div class="dropdown-divider"></div>
     <div class="scrollable-menu">
       <div v-for="(item, index) in items" :key="index">
-        <router-link to="/booking">
-          <a href="#" class="dropdown-item" @click="sendinfo(index, item)">
+        <router-link to="/flightplan">
+          <a href="#" class="dropdown-item" @click="getinfo(index, item.order)">
             <i class="fa fa-user mr-2"></i>
-            {{ item.user.first_name == null ? "guest" : item.user.first_name }}
+            {{ item.user.firstName == null ? "guest" : item.user.firstName
+            }}{{ item.user.lastName == null ? "guest" : item.user.lastName }}
             <span class="float-right text-muted text-sm"
               ><timeago :datetime="item.created_at"></timeago>
             </span> </a
@@ -34,7 +35,7 @@ import { mapActions } from "vuex";
 export default {
   components: {},
 
-  name: "notificationBooking",
+  name: "notificationOrder",
   data() {
     return {
       limit: 0,
@@ -42,14 +43,14 @@ export default {
   },
   computed: {
     items() {
-      return this.$store.state.bookingInfo;
+      return this.$store.state.items;
     },
     isNotLoading() {
       return this.$store.state.isNotLoading;
     },
   },
   mounted() {
-    $(".dropdown-menu").on("click", function(event) {
+    $(".dropdown-menu > .dropdown-footer").on("click", function(event) {
       var events = $._data(document, "events") || {};
       events = events.click || [];
       for (var i = 0; i < events.length; i++) {
@@ -76,19 +77,12 @@ export default {
       // console.log(item);
       this.$store.commit("getinfo", [index, item]);
     },
-    sendinfo(index, item) {
-      this.$store.commit("sendinfo", [index, item]);
-    },
-    markSeen(index, item) {
-      // console.log(item);
-      this.$store.dispatch("markAsSeen", [index, item]);
-    },
-    ...mapActions(["loadnotificationBooking", "socketAdmin"]),
+    ...mapActions(["loadItems", "flightline", "loadCountries", "socketAdmin"]),
 
     infiniteHandler() {
       console.log(this.limit);
       this.limit = this.limit + 10;
-      this.$store.dispatch("loadnotificationBooking", this.limit);
+      this.$store.dispatch("loadItems", this.limit);
     },
   },
 };

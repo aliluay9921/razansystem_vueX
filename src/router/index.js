@@ -10,6 +10,8 @@ import login from '../components/login.vue'
 import discount from '../views/discountFlight.vue'
 import posationAvailable from '../views/posationAvailable.vue'
 import orderPnr from '../views/OrderPnr.vue'
+import HomeManage from '../views/HomeManage.vue'
+import Messgae from "../views/Message.vue"
 Vue.use(VueRouter)
 Vue.use(require('vue-pusher'),
   {
@@ -85,7 +87,18 @@ const routes = [
     path: '/orderPnr',
     name: 'orderPnr',
     component: orderPnr,
+  },
+  {
+    path: '/HomeManage',
+    name: 'HomeManage',
+    component: HomeManage,
+  },
+  {
+    path: '/Messgae',
+    name: 'Messgae',
+    component: Messgae,
   }
+
 ]
 
 const router = new VueRouter({

@@ -7,7 +7,12 @@
         ></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a class="nav-link"> <router-link to="/">Home</router-link></a>
+        <a class="nav-link" v-if="status == 1">
+          <router-link to="/">Home</router-link>
+        </a>
+        <a class="nav-link" v-else>
+          <router-link to="/HomeManage">Home</router-link>
+        </a>
       </li>
     </ul>
 
@@ -60,6 +65,7 @@
         </a>
         <notificationBooking></notificationBooking>
       </li>
+
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -85,6 +91,7 @@ import { mapActions } from "vuex";
 import notificationOrder from "./notificationOrder";
 import notificationAdmin from "./notificationAdmin";
 import notificationBooking from "./notificationBooking";
+
 export default {
   name: "navbar",
   components: {
@@ -98,6 +105,9 @@ export default {
   computed: {
     items() {
       return this.$store.state.items;
+    },
+    status() {
+      return localStorage.getItem("status");
     },
     adminNotification() {
       return this.$store.state.adminNotification;
@@ -119,8 +129,8 @@ export default {
       "socketAdmin",
       "loadnotificationBooking",
       "discount",
-      "posationAvailables",
       "loadOrderPnr",
+      "posationAvailables",
     ]),
   },
 
@@ -131,8 +141,8 @@ export default {
     this.loadCountries();
     this.loadnotificationBooking();
     this.discount();
-    this.posationAvailables();
     this.loadOrderPnr();
+    this.posationAvailables();
   },
   mounted() {
     let scriptSemantic = document.createElement("script");

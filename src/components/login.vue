@@ -2,7 +2,7 @@
   <div>
     <div class="loginPage">
       <div class="form">
-        <h2>تسجيل دخول الموضف </h2>
+        <h2>تسجيل دخول الموضف</h2>
         <form @submit.prevent="login">
           <div class="form-group text-right">
             <label for="exampleInputEmail1 ">اسم المستخدم</label>
@@ -24,14 +24,13 @@
               v-model="password"
             />
           </div>
-          <button
-            type="submit"
-            class="btn btn-primary btn-block"
-          >تسجيل دخول</button>
+          <button type="submit" class="btn btn-primary btn-block">
+            تسجيل دخول
+          </button>
         </form>
       </div>
       <div class="lotte">
-        <img src="/img/animation_640_klp8asrd.gif">
+        <img src="/img/animation_640_klp8asrd.gif" />
       </div>
     </div>
   </div>
@@ -61,12 +60,20 @@ export default {
     };
   },
   methods: {
-    login: function () {
+    login: function() {
       let UserName = this.UserName;
       let password = this.password;
       this.$store
         .dispatch("login", { UserName, password })
-        .then(() => this.$router.push("/"))
+        .then((response) => {
+          console.log(response);
+          let status = localStorage.getItem("status");
+          if (status == 1) {
+            this.$router.push("/");
+          } else {
+            this.$router.push("/HomeManage");
+          }
+        })
         .catch((err) => console.log(err));
     },
     mounted() {},

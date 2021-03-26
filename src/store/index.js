@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 
 
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -26,7 +27,9 @@ export default new Vuex.Store({
     posationAvailables: [],
     pnr: "",
     orderPnr: [],
-    ticket: []
+    ticket: [],
+    Message: [],
+    MessageBrodcast: []
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
@@ -214,6 +217,12 @@ export default new Vuex.Store({
     },
     CREATE_TICKET(state, data) {
       state.ticket.push(data)
+    },
+    SENDMESSAGE(state, data) {
+      state.Message.push(data)
+    },
+    SENDMESSAGEBrodcast(state, data) {
+      state.MessageBrodcast.push(data)
     }
 
   },
@@ -282,16 +291,16 @@ export default new Vuex.Store({
         });
       commit("toggleLoading", false);
     },
-    async loadCountries({ commit }) {
-      await axios.get("http://127.0.0.1:8000/api/countary").then((response) => {
+    async loadCountries({ commit }, skip = 0) {
+      await axios.get("http://127.0.0.1:8000/api/countary?skip=" + skip).then((response) => {
         commit("set_country", response.data.result);
       });
     },
 
 
-    async flightline({ commit }) {
+    async flightline({ commit }, skip = 0) {
       await axios
-        .get("http://127.0.0.1:8000/api/flightline")
+        .get("http://127.0.0.1:8000/api/flightline?skip=" + skip)
         .then((response) => {
           commit("set_flightLine", response.data.result);
 
@@ -305,12 +314,11 @@ export default new Vuex.Store({
 
         });
     },
-    async posationAvailables({ commit }) {
+    async posationAvailables({ commit }, skip = 0) {
       await axios
-        .get("http://127.0.0.1:8000/api/posation")
+        .get("http://127.0.0.1:8000/api/posation?skip=" + skip)
         .then((response) => {
           commit("posationAvailables", response.data.result);
-
         });
     },
     async loadOrderPnr({ commit }) {
@@ -333,8 +341,13 @@ export default new Vuex.Store({
         })
           .then((resp) => {
             const token = resp.data.token;
-            const UserName = resp.data.UserName;
+            const first_name = resp.data.result[0].first_name;
+            const last_name = resp.data.result[0].last_name;
+            const status = resp.data.result[0].status;
             localStorage.setItem("token", token);
+            localStorage.setItem("status", status);
+            localStorage.setItem("first_name", first_name);
+            localStorage.setItem("last_name", last_name);
             axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             commit("auth_success", token, UserName);
             resolve(resp);
@@ -482,7 +495,22 @@ export default new Vuex.Store({
         .then(response => {
           commit('CREATE_TICKET', response.data.result)
         })
+    },
+
+    sendMessgae({ commit }, data) {
+      axios.post("http://127.0.0.1:8000/api/notifications", data)
+        .then(response => {
+          commit('SENDMESSAGE', response.data.result)
+        })
+    },
+    sendMessgaeBrodcast({ commit }, data) {
+      axios.post("http://127.0.0.1:8000/api/notificationsbrodcast", data)
+        .then(response => {
+          commit('SENDMESSAGEBrodcast', response.data.result)
+        })
     }
+
+
 
   },
 });
