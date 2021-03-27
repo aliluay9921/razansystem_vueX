@@ -47,7 +47,7 @@
                       >&#xE254;</i
                     ></a
                   >
-                  <a href="#" class="delete" @click="deletePost(flightline)"
+                  <a href="#myModal" class="delete" data-toggle="modal"
                     ><i
                       class="material-icons"
                       data-toggle="tooltip"
@@ -55,6 +55,38 @@
                       >&#xE872;</i
                     ></a
                   >
+                  <div id="myModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                      <div class="modal-content">
+                        <div class="modal-header flex-column">
+                          <h4 class="modal-title w-100">هل انت متأكد ؟</h4>
+                        </div>
+                        <div class="modal-body">
+                          <p>
+                            سوف تقوم بحذف هذا العنصر للتأكيد عملية الحذف يرجى
+                            الضغط على <b>حذف</b>
+                          </p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                          >
+                            غلق
+                          </button>
+                          <button
+                            type="button"
+                            @click="deletePost(flightline)"
+                            class="btn btn-danger"
+                            data-dismiss="modal"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
