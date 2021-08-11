@@ -5,21 +5,21 @@
         <div class="table-wrapper">
           <div class="table-title">
             <div class="row">
-              <div class="col-sm-6">
-                <h2>Manage <b>Employees</b></h2>
-              </div>
-              <div class="col-sm-6">
+              <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
                   class="btn btn-success"
                   data-toggle="modal"
                   ><i class="material-icons">&#xE147;</i>
-                  <span>اضافة دولة</span></a
+                  <span>اضافة عروض</span></a
                 >
+              </div>
+              <div class="discount">
+                <h2>العروض</h2>
               </div>
             </div>
           </div>
-          <table class="table table-striped table-hover">
+          <table class="table table-striped table-hover" v-if="render">
             <thead>
               <tr>
                 <th>الخطوط الجوية</th>
@@ -58,9 +58,9 @@
                   >
                 </td>
                 <td class="text-center mt-5" v-else>
-                  <span class="text-white bg-danger rounded-pill pl-2 pr-2 "
-                    >غير مفعل</span
-                  >
+                  <div class="text-white bg-danger rounded-pill pl-3 pr-3">
+                    <span>غير مفعل</span>
+                  </div>
                 </td>
                 <td v-if="discountFlight.type == 1">ذهاب وعودة</td>
                 <td v-else>ذهاب فقط</td>
@@ -84,6 +84,7 @@
                       class="material-icons"
                       data-toggle="tooltip"
                       title="Delete"
+                      @click="getID(discountFlight)"
                       >&#xE872;</i
                     ></a
                   >
@@ -113,7 +114,7 @@
                             class="btn btn-danger"
                             data-dismiss="modal"
                           >
-                            Delete
+                            حذف
                           </button>
                         </div>
                       </div>
@@ -143,12 +144,14 @@
       </div>
     </div>
     <!-- add Modal HTML -->
-    <div id="addEmployeeModal" class="modal fade">
+    <div id="addEmployeeModal" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">Add Employee</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title">اضافة عروض</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -159,7 +162,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2"
                   >اختر الخطوط الجوية</label
                 >
@@ -170,14 +173,14 @@
                 >
                   <option>اختر خطوط</option>
                   <option
-                    v-for="flightline in flightlines"
-                    :key="flightline.id"
-                    :value="flightline.id"
-                    >{{ flightline.name }}</option
+                    v-for="item in flightlines"
+                    :key="item.id"
+                    :value="item.id"
+                    >{{ item.name }}</option
                   >
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">التفاصيل </label>
                 <input
                   type="text"
@@ -187,7 +190,7 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">كودالخصم</label>
                 <input
                   type="text"
@@ -197,16 +200,16 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">التخفيض</label>
                 <input
                   type="text"
                   class="form-control"
                   id="discount"
-                  v-model="discount"
+                  v-model="discount_add"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">اقصى عدد</label>
                 <input
                   type="text"
@@ -216,7 +219,7 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">اقل عدد</label>
                 <input
                   type="text"
@@ -226,7 +229,7 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">عددالمسجلين</label>
                 <input
                   type="text"
@@ -236,57 +239,53 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">تاريخ الانتهاء</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
                   id="expair"
                   v-model="expair"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">وقت الرحلة</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
                   id="fromdate"
                   v-model="fromdate"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">التفعيل</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="active"
-                  v-model="active"
-                  aria-describedby="emailHelp"
-                />
+              <div class="form-group text-right">
+                <label for="exampleFormControlSelect2">نوع الحجز</label>
+                <select class="form-control" v-model="type">
+                  <option value="0">ذهاب فقط </option>
+                  <option value="1"> ذهاب وعودة </option>
+                </select>
               </div>
-              <div class="form-group">
+
+              <div class="form-group text-right " v-if="this.type == 1">
                 <label for="exampleInputEmail1">وقت الرجوع</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
                   id="returndate"
                   v-model="returndate"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">نوع الحجز</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="type"
-                  v-model="type"
-                  aria-describedby="emailHelp"
-                />
+
+              <div class="form-group text-right">
+                <label for="exampleFormControlSelect2">التفعيل</label>
+                <select class="form-control" v-model="active">
+                  <option value="0">غير مفعل </option>
+                  <option value="1"> مفعل </option>
+                </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2">اختر دولة</label>
                 <select class="form-control" id="to" v-model="to">
                   <option
@@ -297,7 +296,7 @@
                   >
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2">اختر دولة</label>
                 <select class="form-control" id="from" v-model="from">
                   <option>اختر دولة</option>
@@ -316,14 +315,14 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="additem"
                 data-dismiss="modal"
                 class="btn btn-success"
-                value="Add"
+                value="اضافة"
               />
             </div>
           </form>
@@ -331,12 +330,14 @@
       </div>
     </div>
     <!-- Edit Modal HTML -->
-    <div id="discountModel" class="modal fade">
+    <div id="discountModel" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">Edit Employee</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title">تعديل العرض</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -347,25 +348,24 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2"
                   >اختر الخطوط الجوية</label
                 >
                 <select
-                  class="form-control"
+                  class="form-control p-0"
                   id="flightline"
                   v-model="flightline_id"
                 >
-                  <option>اختر خطوط</option>
                   <option
-                    v-for="flightline in flightlines"
-                    :key="flightline.id"
-                    :value="flightline.id"
-                    >{{ flightline.name }}</option
+                    v-for="(flightline_new, index) in flightlines"
+                    :key="index"
+                    :value="flightline_new.id"
+                    >{{ flightline_new.name }}</option
                   >
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">التفاصيل </label>
                 <input
                   type="text"
@@ -375,7 +375,7 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">كودالخصم</label>
                 <input
                   type="text"
@@ -385,17 +385,17 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">التخفيض</label>
                 <input
                   type="text"
                   class="form-control"
                   id="discount"
-                  v-model="discount"
+                  v-model="discount_add"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">اقصى عدد</label>
                 <input
                   type="text"
@@ -405,7 +405,7 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">اقل عدد</label>
                 <input
                   type="text"
@@ -415,7 +415,7 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">عددالمسجلين</label>
                 <input
                   type="text"
@@ -425,59 +425,54 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">تاريخ الانتهاء</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
                   id="expair"
                   v-model="expair"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">وقت الرحلة</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
                   id="fromdate"
                   v-model="fromdate"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">التفعيل</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="active"
-                  v-model="active"
-                  aria-describedby="emailHelp"
-                />
+              <div class="form-group text-right">
+                <label for="exampleFormControlSelect2">نوع الحجز</label>
+                <select class="form-control p-0" v-model="type">
+                  <option value="0">ذهاب فقط </option>
+                  <option value="1"> ذهاب وعودة </option>
+                </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">وقت الرجوع</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
                   id="returndate"
                   v-model="returndate"
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">نوع الحجز</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="type"
-                  v-model="type"
-                  aria-describedby="emailHelp"
-                />
+              <div class="form-group text-right">
+                <label for="exampleFormControlSelect2">التفعيل</label>
+                <select class="form-control p-0" v-model="active">
+                  <option value="0">غير مفعل </option>
+                  <option value="1"> مفعل </option>
+                </select>
               </div>
-              <div class="form-group">
+
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2">اختر دولة</label>
-                <select class="form-control" id="from" v-model="from">
+                <select class="form-control p-0" id="from" v-model="from">
                   <option
                     v-for="countrie in countries"
                     :key="countrie.id"
@@ -486,9 +481,9 @@
                   >
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2">اختر دولة</label>
-                <select class="form-control" id="to" v-model="to">
+                <select class="form-control p-0" id="to" v-model="to">
                   <option
                     v-for="countrie in countries"
                     :key="countrie.id"
@@ -503,13 +498,13 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="saveitem"
                 class="btn btn-info"
-                value="Save"
+                value="تعديل"
                 data-dismiss="modal"
               />
             </div>
@@ -529,7 +524,7 @@ export default {
       flightline_id: "",
       details: "",
       code_discount: "",
-      discount: "",
+      discount_add: "",
       miximum_number: "",
       minimum_number: "",
       current_user: "",
@@ -541,24 +536,28 @@ export default {
       from: "",
       to: "",
       current: -1,
+      discount_delete: "",
     };
   },
   computed: {
     ...mapState(["discountFlights", "countries", "flightlines", "render"]),
   },
   methods: {
-    ...mapActions(["discount", "loadCountries", "flightline"]),
-    deletePost(discountFlight) {
-      this.$store.dispatch("deleteDiscount", discountFlight);
+    ...mapActions(["discount", "loadCountries"]),
+    getID(discountFlight) {
+      this.discount_delete = discountFlight;
     },
+    deletePost() {
+      this.$store.dispatch("deleteDiscount", this.discount_delete);
+    },
+
     editPost(index) {
-      console.log(index);
       this.current = index;
 
       this.flightline_id = this.discountFlights[index].flightline_id;
       this.details = this.discountFlights[index].details;
       this.code_discount = this.discountFlights[index].code_discount;
-      this.discount = this.discountFlights[index].discount;
+      this.discount_add = this.discountFlights[index].discount;
       this.miximum_number = this.discountFlights[index].miximum_number;
       this.minimum_number = this.discountFlights[index].minimum_number;
       this.current_user = this.discountFlights[index].current_user;
@@ -577,7 +576,7 @@ export default {
         flightline_id: this.flightline_id,
         details: this.details,
         code_discount: this.code_discount,
-        discount: this.discount,
+        discount: this.discount_add,
         miximum_number: this.miximum_number,
         minimum_number: this.minimum_number,
         current_user: this.current_user,
@@ -589,8 +588,8 @@ export default {
         from: this.from,
         to: this.to,
       };
+
       this.$store.dispatch("updateDiscount", data);
-      this.$store.dispatch("forceRerender");
     },
 
     additem() {
@@ -598,7 +597,7 @@ export default {
         flightline_id: this.flightline_id,
         details: this.details,
         code_discount: this.code_discount,
-        discount: this.discount,
+        discount: this.discount_add,
         miximum_number: this.miximum_number,
         minimum_number: this.minimum_number,
         current_user: this.current_user,
@@ -642,6 +641,19 @@ export default {
 };
 </script>
 <style>
+.row {
+  position: relative;
+  height: 50px;
+}
+.row .add_btn {
+  position: absolute;
+  left: 10px;
+  padding: 10px !important;
+}
+.row .discount {
+  position: absolute;
+  right: 10px;
+}
 .table {
   width: 100%;
   text-align: center;

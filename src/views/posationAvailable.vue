@@ -5,17 +5,17 @@
         <div class="table-wrapper">
           <div class="table-title">
             <div class="row">
-              <div class="col-sm-6">
-                <h2>الاماكن <b>المتوفرة</b></h2>
-              </div>
-              <div class="col-sm-6">
+              <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
                   class="btn btn-success"
                   data-toggle="modal"
                   ><i class="material-icons">&#xE147;</i>
-                  <span>اضافة دولة</span></a
+                  <span>اضافة اماكن مخصصة</span></a
                 >
+              </div>
+              <div class="airline">
+                <h2>اماكن <b>مخصصة</b></h2>
               </div>
             </div>
           </div>
@@ -63,6 +63,7 @@
                       class="material-icons"
                       data-toggle="tooltip"
                       title="Delete"
+                      @click="getID(posationAvailable)"
                       >&#xE872;</i
                     ></a
                   >
@@ -88,11 +89,11 @@
                           </button>
                           <button
                             type="button"
-                            @click="deletePost(posationAvailable)"
+                            @click="deletePost()"
                             class="btn btn-danger"
                             data-dismiss="modal"
                           >
-                            Delete
+                            حذف
                           </button>
                         </div>
                       </div>
@@ -102,32 +103,18 @@
               </tr>
             </tbody>
           </table>
-          <div class="clearfix">
-            <ul class="pagination">
-              <li class="page-item disabled">
-                <a href="#" class="page-link" @click="previous">Previous</a>
-              </li>
-              <li class="page-item">
-                <a href="#" class="page-link" @click="plus_one">1</a>
-              </li>
-              <li class="page-item">
-                <a href="#" class="page-link" @click="plus_two">2</a>
-              </li>
-              <li class="page-item">
-                <a href="#" @click="next" class="page-link">Next</a>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
     <!-- add Modal HTML -->
-    <div id="addEmployeeModal" class="modal fade">
+    <div id="addEmployeeModal" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">Add Employee</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title">اضافة اماكن مخصصة</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -138,7 +125,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2">اختر الدولة</label>
                 <select
                   class="form-control"
@@ -153,10 +140,11 @@
                   >
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputPassword1">صورة</label>
                 <input
                   type="file"
+                  class="form-control-file"
                   id="image-upload"
                   chips
                   accept="image/*"
@@ -170,14 +158,14 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="additem"
                 data-dismiss="modal"
                 class="btn btn-success"
-                value="Add"
+                value="اضافة"
               />
             </div>
           </form>
@@ -185,12 +173,14 @@
       </div>
     </div>
     <!-- Edit Modal HTML -->
-    <div id="positionAvilable" class="modal fade">
+    <div id="positionAvilable" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">Edit Employee</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title">تعديل المكان المخصص</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -201,10 +191,10 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleFormControlSelect2">اختر الدولة</label>
                 <select
-                  class="form-control"
+                  class="form-control p-0"
                   id="countary"
                   v-model="countary_id"
                 >
@@ -216,10 +206,11 @@
                   >
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputPassword1">صورة</label>
                 <input
                   type="file"
+                  class="form-control-file"
                   id="image-upload"
                   chips
                   accept="image/*"
@@ -233,13 +224,13 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="saveitem"
                 class="btn btn-info"
-                value="Save"
+                value="تعديل"
                 data-dismiss="modal"
               />
             </div>
@@ -261,43 +252,31 @@ export default {
       image: null,
       current: -1,
       skip: 0,
+      posationAvailable_delete: "",
     };
   },
   computed: {
     ...mapState(["posationAvailables", "countries", "render"]),
   },
   methods: {
-    ...mapActions(["posationAvailables", "loadCountries"]),
-
-    previous() {
-      this.skip = this.skip - 5;
-      this.$store.dispatch("posationAvailables", this.skip);
-      console.log(this.skip);
-    },
-    plus_one() {
-      this.skip = 5;
-      this.$store.dispatch("posationAvailables", this.skip);
-      console.log(this.skip);
-    },
-    plus_two() {
-      this.skip = 10;
-      this.$store.dispatch("posationAvailables", this.skip);
-      console.log(this.skip);
-    },
-    next() {
-      this.skip = this.skip + 5;
-      this.$store.dispatch("posationAvailables", this.skip);
-      console.log(this.skip);
+    ...mapActions(["getPosationAvailables", "loadCountries"]),
+    getID(posationAvailable) {
+      this.posationAvailable_delete = posationAvailable;
     },
 
-    deletePost(posationAvailable) {
-      this.$store.dispatch("deletePosationAvailables", posationAvailable);
+    deletePost() {
+      this.$store.dispatch(
+        "deletePosationAvailables",
+        this.posationAvailable_delete
+      );
     },
     additem() {
       let data = {
         countary_id: this.countary_id,
-        new_image: this.image,
       };
+      if (this.image != null) {
+        data["new_image"] = this.image;
+      }
       this.$store.dispatch("createPosationAvailables", data);
     },
     editPost(index) {
@@ -311,9 +290,8 @@ export default {
         countary_id: this.countary_id,
       };
       if (this.image != null) data["new_image"] = this.image;
-
+      console.log(data);
       this.$store.dispatch("updatePosationAvailables", data);
-      this.$store.dispatch("forceRerender");
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
@@ -354,6 +332,9 @@ export default {
         }
       });
     });
+  },
+  created() {
+    this.getPosationAvailables();
   },
 };
 </script>

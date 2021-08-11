@@ -5,10 +5,7 @@
         <div class="table-wrapper">
           <div class="table-title">
             <div class="row">
-              <div class="col-sm-6">
-                <h2>الدول <b>المتاحة</b></h2>
-              </div>
-              <div class="col-sm-6">
+              <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
                   @click="addEmpty"
@@ -18,6 +15,9 @@
                   <span>اضافة دولة</span></a
                 >
               </div>
+              <div class="available_countary">
+                <h2>الدول <b>المتاحة</b></h2>
+              </div>
             </div>
           </div>
           <table class="table table-striped table-hover">
@@ -25,7 +25,7 @@
               <tr>
                 <th>الكود</th>
                 <th>الاسم العربي</th>
-                <th>geo</th>
+                <th>الموقع</th>
                 <th>الاسم الكامل</th>
                 <th>اسم المدينة</th>
                 <th>العمليات</th>
@@ -51,7 +51,11 @@
                       >&#xE254;</i
                     ></a
                   >
-                  <a href="#myModal" data-toggle="modal" class="delete"
+                  <a
+                    href="#myModal"
+                    data-toggle="modal"
+                    class="delete"
+                    @click="getID(country)"
                     ><i
                       class="material-icons"
                       data-toggle="tooltip"
@@ -85,7 +89,7 @@
                             class="btn btn-danger"
                             data-dismiss="modal"
                           >
-                            Delete
+                            حذف
                           </button>
                         </div>
                       </div>
@@ -115,12 +119,14 @@
       </div>
     </div>
     <!-- add Modal HTML -->
-    <div id="addEmployeeModal" class="modal fade">
+    <div id="addEmployeeModal" class="modal fade" dir="rtl">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content ">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">Add Employee</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title text-center">اضافة دولة</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -131,8 +137,8 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
-                <label for="exampleInputEmail1">code</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1" class="text-left">الكود</label>
                 <input
                   type="text"
                   class="form-control"
@@ -141,8 +147,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">geo</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الموقع</label>
                 <input
                   type="text"
                   class="form-control"
@@ -151,8 +157,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">longName</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الاسم الكامل </label>
                 <input
                   type="text"
                   class="form-control"
@@ -161,8 +167,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">cityName</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">اسم المدينة</label>
                 <input
                   type="text"
                   class="form-control"
@@ -171,8 +177,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">nameArbic</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الاسم بالعربي</label>
                 <input
                   type="text"
                   class="form-control"
@@ -187,14 +193,14 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="additem"
                 data-dismiss="modal"
                 class="btn btn-success"
-                value="Add"
+                value="اضافة "
               />
             </div>
           </form>
@@ -202,12 +208,14 @@
       </div>
     </div>
     <!-- Edit Modal HTML -->
-    <div id="countryModal" class="modal fade">
+    <div id="countryModal" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">Edit Employee</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title text-center">تعديل دولة</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -218,8 +226,8 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
-                <label for="exampleInputEmail1">code</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الكود</label>
                 <input
                   type="text"
                   class="form-control"
@@ -228,8 +236,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">geo</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الموقع</label>
                 <input
                   type="text"
                   class="form-control"
@@ -238,8 +246,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">longName</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الاسم الكامل </label>
                 <input
                   type="text"
                   class="form-control"
@@ -248,8 +256,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">cityName</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">اسم المدينة</label>
                 <input
                   type="text"
                   class="form-control"
@@ -258,8 +266,8 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
-                <label for="exampleInputEmail1">nameArbic</label>
+              <div class="form-group text-right">
+                <label for="exampleInputEmail1">الاسم العربي </label>
                 <input
                   type="text"
                   class="form-control"
@@ -274,13 +282,13 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="saveitem"
                 class="btn btn-info"
-                value="Save"
+                value="تعديل"
                 data-dismiss="modal"
               />
             </div>
@@ -289,6 +297,29 @@
       </div>
     </div>
     <!-- Delete Modal HTML -->
+
+    <div id="myModal" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <i class="material-icons">&#xE876;</i>
+            </div>
+            <h4 class="modal-title w-100">Awesome!</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">
+              Your booking has been confirmed. Check your email for detials.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success btn-block" data-dismiss="modal">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -304,6 +335,7 @@ export default {
       NameArbic: "",
       current: -1,
       skip: 0,
+      country_id: "",
     };
   },
   computed: {
@@ -311,6 +343,11 @@ export default {
   },
   methods: {
     ...mapActions(["loadCountries"]),
+
+    getID(countary) {
+      this.country_id = countary;
+      console.log(this.country_id);
+    },
     previous() {
       this.skip = this.skip - 5;
       this.$store.dispatch("loadCountries", this.skip);
@@ -332,8 +369,9 @@ export default {
       console.log(this.skip);
     },
 
-    deletePost(country) {
-      this.$store.dispatch("deletecountry", country);
+    deletePost() {
+      console.log(this.country_id);
+      this.$store.dispatch("deletecountry", this.country_id);
     },
     addEmpty() {
       this.code = "";
@@ -362,7 +400,6 @@ export default {
         geo: this.geo,
       };
       this.$store.dispatch("updatecountry", data);
-      this.$store.dispatch("forceRerender");
     },
     additem() {
       let data = {
@@ -404,6 +441,19 @@ export default {
 };
 </script>
 <style>
+.row {
+  position: relative;
+  height: 50px;
+}
+.row .add_btn {
+  position: absolute;
+  left: 10px;
+  padding: 10px !important;
+}
+.row .available_countary {
+  position: absolute;
+  right: 10px;
+}
 .table {
   width: 100%;
   text-align: center;

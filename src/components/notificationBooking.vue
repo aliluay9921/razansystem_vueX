@@ -8,6 +8,8 @@
           <a href="#" class="dropdown-item" @click="sendinfo(index, item)">
             <i class="fa fa-user mr-2"></i>
             {{ item.user.first_name == null ? "guest" : item.user.first_name }}
+            {{ item.user.last_name == null ? "guest" : item.user.last_name }}
+
             <span class="float-right text-muted text-sm"
               ><timeago :datetime="item.created_at"></timeago>
             </span> </a

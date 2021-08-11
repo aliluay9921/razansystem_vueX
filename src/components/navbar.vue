@@ -130,7 +130,6 @@ export default {
       "loadnotificationBooking",
       "discount",
       "loadOrderPnr",
-      "posationAvailables",
     ]),
   },
 
@@ -142,7 +141,6 @@ export default {
     this.loadnotificationBooking();
     this.discount();
     this.loadOrderPnr();
-    this.posationAvailables();
   },
   mounted() {
     let scriptSemantic = document.createElement("script");

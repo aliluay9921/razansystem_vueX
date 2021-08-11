@@ -1,14 +1,15 @@
 <template>
   <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-    <span class="dropdown-item dropdown-header">اشعارات تسجيل حجوزات</span>
+    <span class="dropdown-item dropdown-header">اشعارات وصول طلبات</span>
     <div class="dropdown-divider"></div>
     <div class="scrollable-menu">
       <div v-for="(item, index) in items" :key="index">
         <router-link to="/flightplan">
           <a href="#" class="dropdown-item" @click="getinfo(index, item.order)">
             <i class="fa fa-user mr-2"></i>
-            {{ item.user.firstName == null ? "guest" : item.user.firstName
-            }}{{ item.user.lastName == null ? "guest" : item.user.lastName }}
+            {{ item.user.first_name == null ? "guest" : item.user.first_name }}
+            {{ "   " }}
+            {{ item.user.last_name == null ? "guest" : item.user.last_name }}
             <span class="float-right text-muted text-sm"
               ><timeago :datetime="item.created_at"></timeago>
             </span> </a

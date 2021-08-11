@@ -38,16 +38,13 @@ export default new Vuex.Store({
 
   mutations: {
     dashboardCount(state, data) {
-
       state.dashboardCount = data
     },
     getinfo(state, item) {
-
       state.notification_index = item[0];
       state.selected_order = item[1];
     },
     sendinfo(state, item) {
-
       state.select_booking = item[1];
     },
     // ###################### auth process ######################33
@@ -95,7 +92,6 @@ export default new Vuex.Store({
       if (data.type == 0) state.items.unshift(data);
       else if (data.type == 2) state.adminNotification.unshift(data);
       else if (data.type == 5) state.bookingInfo.unshift(data);
-
     },
     set_flightLine(state, data) {
       for (let index = 0; index < data.length; index++) {
@@ -109,12 +105,12 @@ export default new Vuex.Store({
     },
     set_discount(state, data) {
 
-      for (let index = 0; index < data.length; ++index) {
+      for (let index = 0; index < data.length; index++) {
         Vue.set(state.discountFlights, index, data[index]);
       }
     },
-    posationAvailables(state, data) {
-      for (let index = 0; index < data.length; ++index) {
+    posation_Availables(state, data) {
+      for (let index = 0; index < data.length; index++) {
         Vue.set(state.posationAvailables, index, data[index]);
       }
     },
@@ -160,15 +156,21 @@ export default new Vuex.Store({
       state.posationAvailables.splice(index, 1);
     },
 
-    updateitem: (state, flightline) => {
+    update_flightline: (state, data) => {
       const index = state.flightlines.findIndex(
-        (todo) => todo.id === flightline.id
+        (todo) => todo.id === data.id
       );
+
+      if (data.new_image == undefined) {
+        data['image'] = state.flightlines[index].image
+      }
       if (index !== -1) {
-        Vue.set(state.flightlines, index, flightline);
+        Vue.set(state.flightlines, index, data);
       }
     },
-    updatecountry: (state, countary) => {
+
+    update_countary: (state, countary) => {
+      console.log(countary)
       const index = state.countries.findIndex(
         (todo) => todo.id === countary.id
       );
@@ -177,20 +179,25 @@ export default new Vuex.Store({
       }
     },
 
-    updateDiscount: (state, discount) => {
-      const index = state.discountFlights.findIndex(
-        (todo) => todo.id === discount.id
+    update_discount: (state, data) => {
+      let index = state.discountFlights.findIndex(
+        (item) => item.id === data.id
       );
+
+      console.log(index)
       if (index !== -1) {
-        Vue.set(state.discountFlights, index, discount);
+        Vue.set(state.discountFlights, index, data);
       }
+      console.log(state.discountFlights[index])
     },
-    updatePosationAvailables: (state, PosationAvailable) => {
-      const index = state.PosationAvailables.findIndex(
-        (todo) => todo.id === PosationAvailable.id
+    update_PosationAvailables(state, data) {
+
+      let index = state.PosationAvailables.findIndex(
+        (todo) => todo.id === data.id
       );
+      console.log(index);
       if (index !== -1) {
-        Vue.set(state.PosationAvailables, index, PosationAvailable);
+        Vue.set(state.PosationAvailables, index, data);
       }
     },
 
@@ -204,8 +211,9 @@ export default new Vuex.Store({
     CREATE_DISCOUNT(state, data) {
       state.discountFlights.push(data);
     },
-    CREATE_posationAvailables(state, data) {
-      state.posationAvailables.push(data);
+    add_posation_available(state, data) {
+      state.posationAvailables.push(data)
+
     },
     update_notification(state, data) {
       let item = data[1];
@@ -311,14 +319,16 @@ export default new Vuex.Store({
         .get("http://127.0.0.1:8000/api/discount")
         .then((response) => {
           commit("set_discount", response.data.result);
+          console.log(response.data.result)
 
         });
     },
-    async posationAvailables({ commit }, skip = 0) {
+    async getPosationAvailables({ commit }) {
       await axios
-        .get("http://127.0.0.1:8000/api/posation?skip=" + skip)
+        .get("http://127.0.0.1:8000/api/posation")
         .then((response) => {
-          commit("posationAvailables", response.data.result);
+          commit("posation_Availables", response.data.result);
+          console.log(response)
         });
     },
     async loadOrderPnr({ commit }) {
@@ -419,8 +429,8 @@ export default new Vuex.Store({
     async updateitem({ commit }, data) {
       await axios
         .put("http://127.0.0.1:8000/api/flightline", data)
-        .then((response) => {
-          commit("updateitem", response.data.result[0]);
+        .then(() => {
+          commit("update_flightline", data);
         });
     },
     async updatecountry({ commit }, data) {
@@ -428,21 +438,28 @@ export default new Vuex.Store({
       await axios
         .put("http://127.0.0.1:8000/api/countary", data)
         .then((response) => {
-          commit("updatecountary", response.data.result[0]);
+          commit("update_countary", data);
+          console.log(response)
+          console.log(data)
         });
+
     },
     async updateDiscount({ commit }, data) {
       await axios
         .put("http://127.0.0.1:8000/api/discount", data)
         .then((response) => {
-          commit("updateDiscount", response.data.result[0]);
+          commit("update_discount", data);
+          console.log(response)
         });
     },
     async updatePosationAvailables({ commit }, data) {
       await axios
         .put("http://127.0.0.1:8000/api/posation", data)
         .then((response) => {
-          commit("updatePosationAvailables", response.data.result[0]);
+          console.log(response)
+          console.log(data)
+          commit("update_PosationAvailables", data);
+
         });
     },
     createPost({ commit }, data) {
@@ -473,14 +490,12 @@ export default new Vuex.Store({
 
         });
     },
-    createPosationAvailables({ commit }, data) {
-      axios
+    async createPosationAvailables({ commit }, data) {
+      await axios
         .post("http://127.0.0.1:8000/api/posation", data)
         .then((response) => {
 
-          commit("CREATE_PosationAvailables", response.data.result[0]);
-          console.log(response.data.result[0]);
-
+          commit("add_posation_available", response.data.result[0]);
         });
     },
     create_pnr({ commit }, data) {

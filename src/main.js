@@ -4,8 +4,9 @@ import router from './router'
 import store from './store/index'
 import Axios from 'axios'
 import VueTimeago from 'vue-timeago'
+import VueGoodTablePlugin from 'vue-good-table';
 
-
+Vue.use(VueGoodTablePlugin);
 
 Vue.use(VueTimeago, {
   name: 'Timeago', // Component name, `Timeago` by default

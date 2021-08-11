@@ -5,10 +5,7 @@
         <div class="table-wrapper">
           <div class="table-title">
             <div class="row">
-              <div class="col-sm-6">
-                <h2>خطوط <b>الطيران</b></h2>
-              </div>
-              <div class="col-sm-6">
+              <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
                   class="btn btn-success"
@@ -17,6 +14,9 @@
                   ><i class="material-icons">&#xE147;</i>
                   <span>اضافة خطوط طيران</span></a
                 >
+              </div>
+              <div class="airline">
+                <h2>خطوط <b>الطيران</b></h2>
               </div>
             </div>
           </div>
@@ -32,7 +32,13 @@
               <tr v-for="(flightline, index) in flightlines" :key="index">
                 <td>{{ flightline.name }}</td>
                 <td>
-                  <img :src="local + flightline.image" alt="image" />
+                  <a :href="local + flightline.image"
+                    ><img
+                      :src="local + flightline.image"
+                      alt="image"
+                      width="50px"
+                      height="50px"
+                  /></a>
                 </td>
                 <td>
                   <a
@@ -52,6 +58,7 @@
                       class="material-icons"
                       data-toggle="tooltip"
                       title="Delete"
+                      @click="getID(flightline)"
                       >&#xE872;</i
                     ></a
                   >
@@ -77,11 +84,11 @@
                           </button>
                           <button
                             type="button"
-                            @click="deletePost(flightline)"
+                            @click="deletePost()"
                             class="btn btn-danger"
                             data-dismiss="modal"
                           >
-                            Delete
+                            حذف
                           </button>
                         </div>
                       </div>
@@ -111,12 +118,14 @@
       </div>
     </div>
     <!-- add Modal HTML -->
-    <div id="addEmployeeModal" class="modal fade">
+    <div id="addEmployeeModal" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">اضافة خطوط طيران</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title">اضافة خطوط طيران</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -127,7 +136,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">الاسم </label>
                 <input
                   type="text"
@@ -138,10 +147,11 @@
                   placeholder="الاسم"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group  text-right">
                 <label for="exampleInputPassword1">صورة</label>
                 <input
                   type="file"
+                  class="form-control-file"
                   id="image-upload"
                   chips
                   accept="image/*"
@@ -155,14 +165,14 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="additem"
                 data-dismiss="modal"
                 class="btn btn-success"
-                value="Add"
+                value="اضافة"
               />
             </div>
           </form>
@@ -170,12 +180,14 @@
       </div>
     </div>
     <!-- Edit Modal HTML -->
-    <div id="flightModal" class="modal fade">
+    <div id="flightModal" class="modal fade" dir="rtl">
       <div class="modal-dialog">
         <div class="modal-content">
           <form>
             <div class="modal-header">
-              <h4 class="modal-title">تعديل خطوط الطيران</h4>
+              <div class="w-100 d-flex justfiy-content-start">
+                <h4 class="modal-title">تعديل خطوط طيران</h4>
+              </div>
               <button
                 type="button"
                 class="close"
@@ -186,7 +198,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="exampleInputEmail1">الاسم</label>
                 <input
                   type="text"
@@ -196,10 +208,11 @@
                   aria-describedby="emailHelp"
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group text-right">
                 <label for="image-upload">الصورة</label>
                 <input
                   type="file"
+                  class="form-control-file"
                   id="image-upload"
                   chips
                   accept="image/*"
@@ -213,13 +226,13 @@
                 type="button"
                 class="btn btn-default"
                 data-dismiss="modal"
-                value="Cancel"
+                value="غلق"
               />
               <input
                 type="button"
                 @click="saveitem"
                 class="btn btn-info"
-                value="Save"
+                value="تعديل"
                 data-dismiss="modal"
               />
             </div>
@@ -242,6 +255,8 @@ export default {
       image: null,
       current: -1,
       skip: 0,
+      success: false,
+      flightline_delete: "",
     };
   },
   computed: {
@@ -249,6 +264,9 @@ export default {
   },
   methods: {
     ...mapActions(["flightline"]),
+    getID(flightline) {
+      this.flightline_delete = flightline;
+    },
     previous() {
       this.skip = this.skip - 5;
       this.$store.dispatch("flightline", this.skip);
@@ -293,12 +311,13 @@ export default {
         id: flight.id,
         name: this.name,
       };
-      if (this.image != null) data["new_image"] = this.image;
+      if (this.image != null) {
+        data["new_image"] = this.image;
+      }
       this.$store.dispatch("updateitem", data);
-      this.$store.dispatch("forceRerender");
     },
-    deletePost(flightline) {
-      this.$store.dispatch("deletePost", flightline);
+    deletePost() {
+      this.$store.dispatch("deletePost", this.flightline_delete);
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
@@ -345,6 +364,19 @@ export default {
 </script>
 
 <style>
+.row {
+  position: relative;
+  height: 50px;
+}
+.row .add_btn {
+  position: absolute;
+  left: 10px;
+  padding: 10px !important;
+}
+.row .airline {
+  position: absolute;
+  right: 10px;
+}
 .table {
   width: 100%;
   text-align: center;
