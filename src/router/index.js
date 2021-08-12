@@ -12,13 +12,12 @@ import posationAvailable from '../views/posationAvailable.vue'
 import orderPnr from '../views/OrderPnr.vue'
 import HomeManage from '../views/HomeManage.vue'
 import Messgae from "../views/Message.vue"
+import issusTickets from "../views/issusTicket.vue"
 Vue.use(VueRouter)
 Vue.use(require('vue-pusher'),
   {
     api_key: "hello", options:
-
     {
-
       wsHost: "127.0.0.1",
       wsPort: 6001,
       wssPort: 6001,
@@ -38,19 +37,19 @@ Vue.use(require('vue-pusher'),
   });
 
 const routes = [
+
   {
+    path: '/login',
+    name: 'login',
+    component: login,
+    // meta: { requiresAuth: false },
+  }, {
     path: '/',
     name: 'Home',
     meta: {
       requiresAuth: true
     },
     component: Home
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: login,
-    // meta: { requiresAuth: false },
   },
   {
     path: '/flightplan',
@@ -98,6 +97,11 @@ const routes = [
     name: 'Messgae',
     component: Messgae,
   }
+  , {
+    path: '/issusTickets',
+    name: 'issusTickets',
+    component: issusTickets,
+  },
 
 ]
 

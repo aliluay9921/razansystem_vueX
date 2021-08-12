@@ -10,6 +10,7 @@
                   href="#addEmployeeModal"
                   class="btn btn-success"
                   data-toggle="modal"
+                  @click="addEmpty"
                   ><i class="material-icons">&#xE147;</i>
                   <span>اضافة عروض</span></a
                 >
@@ -551,6 +552,22 @@ export default {
       this.$store.dispatch("deleteDiscount", this.discount_delete);
     },
 
+    addEmpty() {
+      (this.details = ""),
+        (this.code_discount = ""),
+        (this.discount_add = ""),
+        (this.miximum_number = ""),
+        (this.minimum_number = ""),
+        (this.current_user = ""),
+        (this.expair = ""),
+        (this.fromdate = ""),
+        (this.active = ""),
+        (this.returndate = ""),
+        (this.type = ""),
+        (this.from = ""),
+        (this.to = ""),
+        (this.current = -1);
+    },
     editPost(index) {
       this.current = index;
 

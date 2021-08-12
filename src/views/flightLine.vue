@@ -315,6 +315,8 @@ export default {
         data["new_image"] = this.image;
       }
       this.$store.dispatch("updateitem", data);
+      this.name = "";
+      this.image = null;
     },
     deletePost() {
       this.$store.dispatch("deletePost", this.flightline_delete);

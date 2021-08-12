@@ -29,7 +29,8 @@ export default new Vuex.Store({
     orderPnr: [],
     ticket: [],
     Message: [],
-    MessageBrodcast: []
+    MessageBrodcast: [],
+    ticketIssue: []
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
@@ -37,6 +38,7 @@ export default new Vuex.Store({
   },
 
   mutations: {
+
     dashboardCount(state, data) {
       state.dashboardCount = data
     },
@@ -161,9 +163,9 @@ export default new Vuex.Store({
         (todo) => todo.id === data.id
       );
 
-      if (data.new_image == undefined) {
-        data['image'] = state.flightlines[index].image
-      }
+      // if (data.new_image == undefined) {
+      //   data['image'] = state.flightlines[index].image
+      // }
       if (index !== -1) {
         Vue.set(state.flightlines, index, data);
       }
@@ -183,7 +185,6 @@ export default new Vuex.Store({
       let index = state.discountFlights.findIndex(
         (item) => item.id === data.id
       );
-
       console.log(index)
       if (index !== -1) {
         Vue.set(state.discountFlights, index, data);
@@ -192,12 +193,12 @@ export default new Vuex.Store({
     },
     update_PosationAvailables(state, data) {
 
-      let index = state.PosationAvailables.findIndex(
+      let index = state.posationAvailables.findIndex(
         (todo) => todo.id === data.id
       );
       console.log(index);
       if (index !== -1) {
-        Vue.set(state.PosationAvailables, index, data);
+        Vue.set(state.posationAvailables, index, data);
       }
     },
 
@@ -335,6 +336,7 @@ export default new Vuex.Store({
       await axios.get("http://127.0.0.1:8000/api/orderPnr")
         .then(response => {
           commit('order_pnr', response.data.result)
+          console.log(response.data.result[0])
         })
     },
 
@@ -429,8 +431,9 @@ export default new Vuex.Store({
     async updateitem({ commit }, data) {
       await axios
         .put("http://127.0.0.1:8000/api/flightline", data)
-        .then(() => {
-          commit("update_flightline", data);
+        .then((response) => {
+          commit("update_flightline", response.data.result[0]);
+          console.log(response.data.result[0])
         });
     },
     async updatecountry({ commit }, data) {
@@ -448,17 +451,17 @@ export default new Vuex.Store({
       await axios
         .put("http://127.0.0.1:8000/api/discount", data)
         .then((response) => {
-          commit("update_discount", data);
-          console.log(response)
+          commit("update_discount", response.data.result[0]);
+
         });
     },
     async updatePosationAvailables({ commit }, data) {
       await axios
         .put("http://127.0.0.1:8000/api/posation", data)
         .then((response) => {
-          console.log(response)
           console.log(data)
-          commit("update_PosationAvailables", data);
+          commit("update_PosationAvailables", response.data.result[0]);
+          console.log(response.data.result[0])
 
         });
     },
@@ -486,15 +489,14 @@ export default new Vuex.Store({
         .then((response) => {
 
           commit("CREATE_DISCOUNT", response.data.result[0]);
-          console.log(response.data.result[0]);
-
+          console.log(response.data.result[0])
         });
     },
     async createPosationAvailables({ commit }, data) {
       await axios
         .post("http://127.0.0.1:8000/api/posation", data)
         .then((response) => {
-
+          console.log(response.data.result[0])
           commit("add_posation_available", response.data.result[0]);
         });
     },
@@ -509,6 +511,8 @@ export default new Vuex.Store({
       axios.post("http://127.0.0.1:8000/api/ticket", data)
         .then(response => {
           commit('CREATE_TICKET', response.data.result)
+
+          console.log(data)
         })
     },
 

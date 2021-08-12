@@ -5,91 +5,7 @@
 
       <p>قم بالبحث على الحجوزات لأصدار التكت الخاص بالمستخدم</p>
     </div>
-    <!-- <div class="search">
-      <div class="form-group">
-        <label for="">البحث عن حجز</label>
-        <input type="text" v-model="search" class="form-control" />
-      </div>
-    </div>
-    <section class="table table-hover table-bordered mt-3">
-      <table class="ui celled table">
-        <thead>
-          <tr>
-            <th>pnr</th>
-            <th>من</th>
-            <th>الى</th>
-            <th>نوع درجة الطيران</th>
-            <th>عمليات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(order, index) in orderPnr" :key="index">
-            <td>{{ order.PNR }}</td>
-            <td>{{ order.from_location.longName }}</td>
-            <td>{{ order.to_location.longName }}</td>
-            <td v-if="order.cabin == 1">درجة اولى</td>
-            <td v-else>سياحي</td>
-            <td class="operations">
-              <button
-                class="btn btn-success"
-                data-toggle="modal"
-                data-target="#issus_ticket"
-                @click="getData(index)"
-              >
-                اصدار بطاقة
-              </button>
-            </td>
-          </tr>
-        </tbody>
-        <div
-          class="modal fade"
-          id="issus_ticket"
-          data-backdrop="static"
-          data-keyboard="false"
-          tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">
-                  اصدار بطاقة
-                </h5>
-              </div>
-              <div class="modal-body">
-                <div class="form-group">
-                  <label for="exampleInputEmail1">رقم البطاقة</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    v-model="tecket_number"
-                    aria-describedby="emailHelp"
-                  />
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  اغلاق
-                </button>
-                <button
-                  type="button"
-                  @click="ticket_issus"
-                  class="btn btn-primary"
-                >
-                  اصدار
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </table>
-    </section> -->
+
     <div>
       <div class="d-flex justify-content-center mt-5">
         <div class="form-group col-8">
@@ -99,19 +15,69 @@
             :pagination-options="{
               enabled: true,
             }"
-          ></vue-good-table>
+          >
+            <template slot="table-row" slot-scope="props">
+              <span v-if="props.column.field == 'ticket'">
+                <button
+                  type="button"
+                  @click="ticketIssue(props.row)"
+                  class="btn btn-primary"
+                  data-toggle="modal"
+                  data-target="#addticket"
+                >
+                  اصدار تكت
+                </button>
+
+                <div id="addticket" class="modal fade" dir="rtl">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div class="w-100 d-flex justfiy-content-start">
+                          <h4 class="modal-title">اضافة رقم تكت</h4>
+                        </div>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-hidden="true"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group text-right">
+                          <label for="exampleInputPassword1">رقم التكت</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            v-model="ticket_id"
+                          />
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <input
+                          type="button"
+                          class="btn btn-default"
+                          data-dismiss="modal"
+                          value="غلق"
+                        />
+                        <input
+                          type="button"
+                          @click="add_ticket"
+                          data-dismiss="modal"
+                          class="btn btn-success"
+                          value="اضافة"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </span>
+              <span v-else> {{ props.formattedRow[props.column.field] }} </span>
+            </template>
+          </vue-good-table>
         </div>
       </div>
-
-      <!-- 
-:search-options="{
-          enabled: true,
-          trigger: 'key-up',
-          skipDiacritics: true,
-          placeholder: 'Search this table',
-        }"
-
-       -->
     </div>
   </div>
 </template>
@@ -153,11 +119,19 @@ export default {
           filterOptions: { enabled: true },
           // type: "string",
         },
+        {
+          label: "ticket",
+          field: "ticket",
+
+          // type: "string",
+        },
       ],
       // rows: [],
       search: "",
       tecket_number: "",
       current: -1,
+      ticket_id: "",
+      data: "",
     };
   },
   computed: {
@@ -171,6 +145,7 @@ export default {
       let row_data = Array();
       this.orderPnr.forEach((element) => {
         let item = {
+          id: element.id,
           from: element.from_location.longName,
           to: element.to_location.longName,
           flight_type: element.cabin == 0 ? "أقتصادي" : "رجال أعمال",
@@ -183,18 +158,27 @@ export default {
   },
 
   methods: {
-    getData(index) {
-      this.current = index;
+    ticketIssue(data) {
+      this.data = data;
     },
-    ticket_issus() {
-      let order = this.orderPnr[this.current];
+    add_ticket() {
       let data = {
-        order_id: order.id,
-        ticket_id: this.tecket_number,
+        order_id: this.data.id,
+        ticket_id: this.ticket_id,
       };
       console.log(data);
       this.$store.dispatch("create_ticket", data);
+      this.$router.push("/issusTickets");
     },
+    // ticket_issus() {
+    //   let order = this.orderPnr[this.current];
+    //   let data = {
+    //     order_id: order.id,
+    //     ticket_id: this.tecket_number,
+    //   };
+    //   console.log(data);
+    //   this.$store.dispatch("create_ticket", data);
+    // },
   },
 };
 </script>
