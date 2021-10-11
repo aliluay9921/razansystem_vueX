@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <div
-      class="wrapper"
-      v-if="isLoggedIn"
-    >
+    <div class="wrapper" v-if="isLoggedIn">
       |
       <navbar></navbar>
       <router-view />
@@ -28,7 +25,7 @@ export default {
   },
   mounted() {},
   computed: {
-    isLoggedIn: function () {
+    isLoggedIn: function() {
       console.log(this.$store.getters.isLoggedIn);
       return this.$store.getters.isLoggedIn;
     },

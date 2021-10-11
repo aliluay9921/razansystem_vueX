@@ -4,7 +4,7 @@
       <div class="table-responsive">
         <div class="table-wrapper">
           <div class="table-title">
-            <div class="row">
+            <div class="row row_flight">
               <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
@@ -366,18 +366,19 @@ export default {
 </script>
 
 <style>
-.row {
+.row_flight {
   position: relative;
   height: 50px;
 }
-.row .add_btn {
+.row_flight .add_btn {
   position: absolute;
   left: 10px;
   padding: 10px !important;
 }
-.row .airline {
+.row_flight .airline {
   position: absolute;
   right: 10px;
+  bottom: -28px;
 }
 .table {
   width: 100%;

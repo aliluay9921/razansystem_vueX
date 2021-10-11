@@ -4,7 +4,7 @@
       <div class="table-responsive">
         <div class="table-wrapper">
           <div class="table-title">
-            <div class="row">
+            <div class="row row_discount">
               <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
@@ -658,18 +658,19 @@ export default {
 };
 </script>
 <style>
-.row {
+.row_discount {
   position: relative;
   height: 50px;
 }
-.row .add_btn {
+.row_discount .add_btn {
   position: absolute;
   left: 10px;
   padding: 10px !important;
 }
-.row .discount {
+.row_discount .discount {
   position: absolute;
   right: 10px;
+  bottom: -28px;
 }
 .table {
   width: 100%;

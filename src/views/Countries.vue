@@ -4,7 +4,7 @@
       <div class="table-responsive">
         <div class="table-wrapper">
           <div class="table-title">
-            <div class="row">
+            <div class="row  row_countary">
               <div class="add_btn">
                 <a
                   href="#addEmployeeModal"
@@ -441,18 +441,19 @@ export default {
 };
 </script>
 <style>
-.row {
+.row_countary {
   position: relative;
   height: 50px;
 }
-.row .add_btn {
+.row_countary .add_btn {
   position: absolute;
   left: 10px;
   padding: 10px !important;
 }
-.row .available_countary {
+.row_countary .available_countary {
   position: absolute;
   right: 10px;
+  bottom: -28px;
 }
 .table {
   width: 100%;
